@@ -1159,8 +1159,10 @@ export default function App() {
             <div className="card menu">
               <div className="card-head">
                 <div className="eyebrow">Мастерская Деда Мороза</div>
-                <h1>Эльфийский цех</h1>
-                <p className="lead">Дед Мороз и его эльфы собирают подарки для всех детей. Помоги им успеть к празднику!</p>
+                <div className="card-title">
+                  <h1>Эльфийский цех</h1>
+                  <p className="lead">Дед Мороз и его эльфы собирают подарки для всех детей. Помоги им успеть к празднику!</p>
+                </div>
               </div>
               <div className="card-actions">
               <SnowButton variant="corners">
@@ -1181,8 +1183,10 @@ export default function App() {
               <div className="card-head">
                 <div className="intro-icon">{intro.icon}</div>
                 <div className="eyebrow">Новинка</div>
-                <h2>{intro.title}</h2>
-                <p className="lead">{intro.text}</p>
+                <div className="card-title">
+                  <h2>{intro.title}</h2>
+                  <p className="lead">{intro.text}</p>
+                </div>
               </div>
               <div className="card-actions">
                 <SnowButton variant="wide"><MTSButton variant="primary" size={52} fluid className="btn primary" onClick={() => { setIntro(null); setScreen('play'); }}>Понятно</MTSButton></SnowButton>
@@ -1200,8 +1204,10 @@ export default function App() {
           <div className="overlay">
             <div className="card small">
               <div className="card-head">
-                <h2>Перерыв на какао</h2>
-                <p className="lead">{levelTitle(G.L)} · осталось {fmtTime(G.timeLeft)}</p>
+                <div className="card-title">
+                  <h2>Перерыв на какао</h2>
+                  <p className="lead">{levelTitle(G.L)} · осталось {fmtTime(G.timeLeft)}</p>
+                </div>
               </div>
               <div className="card-actions">
               <SnowButton variant="wide"><MTSButton variant="primary" size={52} fluid className="btn primary" onClick={() => setScreen('play')}>Продолжить</MTSButton></SnowButton>
@@ -1218,8 +1224,10 @@ export default function App() {
             <div className={`card result ${result.won ? 'won' : 'lost'}`}>
               <div className="card-head">
                 <div className="eyebrow">{levelTitle(result.L)}</div>
-                <h2>{result.won ? 'Смена закрыта!' : result.failedOut ? 'Заказ сорван!' : 'Дед Мороз недоволен'}</h2>
-                {result.failedOut && <p className="lead">Ребёнок остался без подарка, и смена закончилась. Успевай собрать каждый заказ.</p>}
+                <div className="card-title">
+                  <h2>{result.won ? 'Смена закрыта!' : result.failedOut ? 'Заказ сорван!' : 'Дед Мороз недоволен'}</h2>
+                  {result.failedOut && <p className="lead">Ребёнок остался без подарка, и смена закончилась. Успевай собрать каждый заказ.</p>}
+                </div>
               </div>
               <div className="card-body">
               <div className="stars">
