@@ -296,7 +296,7 @@ export default function App() {
     const next = { ...sv, seen: { ...(sv.seen || {}), [key]: true } };
     saveRef.current = next; setSave(next); writeSave(next);
     if (g.current.hand) returnHand();
-    setIntro(INTROS[key]); setScreen('intro');
+    setIntro({ ...INTROS[key], key }); setScreen('intro');
     return true;
   };
 
@@ -1184,7 +1184,7 @@ export default function App() {
             <div className="card small intro-card">
               <Garland />
               <div className="card-head">
-                <div className="intro-icon">{intro.icon}</div>
+                <div className="intro-icon">{ASSETS[`icon_${intro.key}`] ? <img src={ASSETS[`icon_${intro.key}`]} alt="" /> : intro.icon}</div>
                 <div className="eyebrow">Новинка</div>
                 <div className="card-title">
                   <h2>{intro.title}</h2>

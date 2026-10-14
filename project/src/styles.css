@@ -1348,3 +1348,31 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 @keyframes gl-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .85; } }
 @keyframes gl-spark { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .gl-glow, .gl-spark { animation: none; opacity: .6; } }
+
+/* ───────── карта: финальная смена, значки новинок, эльф ───────── */
+.node.final button.node-img { width: 96px; height: 96px; padding: 0; }
+.node.final.node-locked button.node-img { filter: grayscale(.7) brightness(.85) drop-shadow(0 6px 6px rgba(30, 40, 70, 0.3)); }
+.node .lock-mini { font-size: 22px; }
+.node-badge {
+  position: absolute; top: -22px; width: 46px; height: 46px; z-index: 1; pointer-events: none;
+  border-radius: 50%; background: rgba(255, 255, 255, 0.92); box-shadow: 0 3px 8px rgba(30, 40, 70, 0.3);
+  display: grid; place-items: center;
+}
+.node-badge img { width: 40px; height: 40px; object-fit: contain; }
+.node-badge.right { left: 30px; }
+.node-badge.left { right: 30px; }
+.map-elf img { height: 78px; width: auto; }
+.intro-card .intro-icon img { width: 96px; height: 96px; object-fit: contain; display: block; margin: 0 auto; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.2)); }
+
+.map-world { background-color: #eef3fa; }
+.zone-sign b { font-size: 12px; }
+.zone-residence .zone-sign { width: 190px; }
+.zone-residence .zone-sign { width: 230px; }
+.zone-residence .zone-sign b { font-size: 12px; line-height: 1.05; top: 57%; }
+/* таблички зон — поверх дорожки, кнопки смен — поверх табличек */
+.zone-art { z-index: auto; }
+.zone-art .zone-bg { position: relative; z-index: 1; }
+.zone-art .zone-sign { z-index: 3; }
+.map-path { z-index: 2; }
+.node { z-index: 4; }
+.map-elf { z-index: 5; }

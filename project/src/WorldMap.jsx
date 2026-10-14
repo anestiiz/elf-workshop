@@ -21,10 +21,10 @@ export const ZONES = [
 
 // что нового на смене — значок на карте
 const NEWS = {
-  2: { icon: '🎅', text: 'Срочные заказы' },
-  3: { icon: '❄️', text: 'Бонусы на ленте' },
-  4: { icon: '↩️', text: 'Помехи' },
-  5: { icon: '🌀', text: 'Детали путаются' },
+  2: { icon: '🎅', img: 'icon_urgent', text: 'Срочные заказы' },
+  3: { icon: '❄️', img: 'icon_freeze', text: 'Бонусы на ленте' },
+  4: { icon: '↩️', img: 'icon_reverse', text: 'Помехи' },
+  5: { icon: '🌀', img: 'icon_shuffle', text: 'Детали путаются' },
   12: { icon: '🎄', text: 'Новогодняя ночь' },
 };
 
@@ -36,7 +36,27 @@ const ZONE_ART = {
   workshop: {
     img: 'map_zone_workshop', ratio: 1620 / 1080,
     nodes: [[0.55, 0.80], [0.73, 0.53], [0.71, 0.26]],   // смены 1, 2, 3 — на расчищенной дорожке
-    sign: [0.25, 0.905],                                     // табличка «Цех игрушек» — на снегу внизу слева
+    sign: [0.25, 0.905],                                    // табличка — на снегу внизу слева
+  },
+  post: {
+    img: 'map_zone_post', ratio: 1620 / 1080,
+    nodes: [[0.42, 0.80], [0.30, 0.53], [0.38, 0.24]],
+    sign: [0.74, 0.90],
+  },
+  reindeer: {
+    img: 'map_zone_reindeer', ratio: 1620 / 1080,
+    nodes: [[0.62, 0.80], [0.70, 0.52], [0.62, 0.24]],
+    sign: [0.28, 0.90],
+  },
+  mountains: {
+    img: 'map_zone_mountains', ratio: 1,
+    nodes: [[0.50, 0.70], [0.52, 0.30]],
+    sign: [0.50, 0.93],
+  },
+  residence: {
+    img: 'map_zone_residence', ratio: 1620 / 1080,
+    nodes: [[0.50, 0.62]],
+    sign: [0.30, 0.80],
   },
 };
 const artOf = (z) => (ZONE_ART[z.key] && ASSETS[ZONE_ART[z.key].img] ? ZONE_ART[z.key] : null);
@@ -193,10 +213,10 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
                   </span>
                 );
               })}
-              <div className="residence" style={{ top: nodePos(MAP_LEVELS).y - 215 }}>
+              {!layout.zones.residence.art && <div className="residence" style={{ top: nodePos(MAP_LEVELS).y - 215 }}>
                 {ASSETS.map_residence ? <img src={ASSETS.map_residence} alt="" /> : <span>🏰</span>}
                 <b>Резиденция Деда Мороза</b>
-              </div>
+              </div>}
               {FLAKES.map((f, i) => (
                 <i key={i} className="flake" style={{ left: f.left, animationDelay: f.delay, animationDuration: f.dur, width: f.size, height: f.size }} />
               ))}
@@ -208,7 +228,7 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
             const zz = layout.zones[z.key];
             if (!zz.art) return null;
             return (
-              <div key={`art-${z.key}`} className="zone-art" style={{ top: zz.top, height: zz.h }} aria-hidden="true">
+              <div key={`art-${z.key}`} className={`zone-art zone-${z.key}`} style={{ top: zz.top, height: zz.h }} aria-hidden="true">
                 <img className="zone-bg" src={ASSETS[zz.art.img]} alt="" draggable={false} />
                 {zz.art.sign && (
                   <span className="zone-sign" style={{ left: `${zz.art.sign[0] * 100}%`, top: `${zz.art.sign[1] * 100}%`, backgroundImage: ASSETS.map_sign ? `url(${ASSETS.map_sign})` : undefined }}>
@@ -233,13 +253,13 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
             return (
               <div key={L} className={`node node-${state} ${L === MAP_LEVELS ? 'final' : ''}`} style={{ left: p.x, top: p.y }}>
                 {(() => {
-                  const img = L !== MAP_LEVELS && ASSETS[`map_node_${state}`];
+                  const img = L === MAP_LEVELS ? ASSETS.map_node_final : ASSETS[`map_node_${state}`];
                   return (
                     <button onClick={() => tapNode(L)} aria-label={`${levelTitle(L)}${state === 'locked' ? ', закрыта' : ''}`}
                       className={img ? 'node-img' : ''} style={img ? { backgroundImage: `url(${img})` } : undefined}>
                       {state === 'locked'
-                        ? (img ? null : <span className="lock">🔒</span>)
-                        : <b>{L === MAP_LEVELS ? '🎄' : L}</b>}
+                        ? (img ? (L === MAP_LEVELS ? <span className="lock-mini">🔒</span> : null) : <span className="lock">🔒</span>)
+                        : (L === MAP_LEVELS ? (img ? null : <b>🎄</b>) : <b>{L}</b>)}
                     </button>
                   );
                 })()}
@@ -250,7 +270,9 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
                       : <i key={k} className={k < st ? 'on' : ''}>★</i>))}
                   </div>
                 )}
-                {news && <span className={`node-news ${XS[i] > 50 ? 'left' : 'right'}`}><i>{news.icon}</i>{news.text}</span>}
+                {news && (news.img && ASSETS[news.img]
+                  ? <span className={`node-badge ${p.x > W / 2 ? 'left' : 'right'}`} title={news.text}><img src={ASSETS[news.img]} alt={news.text} /></span>
+                  : <span className={`node-news ${p.x > W / 2 ? 'left' : 'right'}`}><i>{news.icon}</i>{news.text}</span>)}
                 {state === 'current' && !walking && elfAt === L && <span className="node-play">Играть · {cfg.toys.length} игрушек</span>}
                 {toast && toast.L === L && <span className="node-toast">{toast.text}</span>}
               </div>
@@ -258,8 +280,8 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
           })}
 
           <div className={`map-elf ${walking ? 'walking' : ''}`} style={{ left: px(elfP.x), top: elfP.y }} aria-hidden="true">
-            {ASSETS.elf_happy
-              ? <img src={walking ? ASSETS.elf_happy : ASSETS.elf_idle || ASSETS.elf_happy} alt="" />
+            {ASSETS.map_elf_walk || ASSETS.elf_happy
+              ? <img src={ASSETS.map_elf_walk || (walking ? ASSETS.elf_happy : ASSETS.elf_idle || ASSETS.elf_happy)} alt="" />
               : <span>🧝</span>}
           </div>
 

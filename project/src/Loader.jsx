@@ -30,7 +30,7 @@ export default function Loader({ onDone, onStart }) {
   // предзагрузка всех картинок игры (и шрифтов)
   useEffect(() => {
     const urls = Object.entries(ASSETS)
-      .filter(([k]) => !k.startsWith('music_bg') && k !== 'loader')
+      .filter(([k]) => !k.startsWith('music_bg') && !k.startsWith('map_zone') && k !== 'loader')
       .map(([, v]) => v);
     const total = urls.length + 1;
     let done = 0;
@@ -40,6 +40,8 @@ export default function Loader({ onDone, onStart }) {
       img.onload = tick; img.onerror = tick;
       img.src = u;
     });
+    // большие фоны карты качаем в фоне, не задерживая загрузку
+    Object.entries(ASSETS).filter(([k]) => k.startsWith('map_zone')).forEach(([, v], i) => setTimeout(() => { const im = new Image(); im.src = v; }, 1500 + i * 400));
     const fonts = document.fonts && document.fonts.ready;
     (fonts ? fonts.then(tick, tick) : Promise.resolve().then(tick));
   }, []);

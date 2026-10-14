@@ -6,7 +6,7 @@ const M = 16;          // насколько гирлянда выходит з�
 const SIDE = 96;       // как далеко свисает по бокам
 const TOP_Y = -12;      // линия крючков над верхним краем карточки
 const SAG = 8;         // провис между крючками
-const COLORS = ['#ff4d42', '#ffcf3d', '#3fd06a', '#4fb3ff', '#ff7ad9'];
+const COLORS = ['#e8352c', '#ffd23f', '#2fb35a'];   // классика: красный, золотой, зелёный
 
 function build(w) {
   const pts = [];
@@ -41,7 +41,7 @@ function build(w) {
   // мишура: пушистые «иголки» во все стороны вокруг провода, золото с красным и серебром вперемешку
   let seed = 7;
   const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-  const PAL = ['#f8cf4a', '#f8cf4a', '#e7a82a', '#fff1a6', '#c88a18', '#ef4b3f', '#ff8a7c', '#eef3f9', '#f8cf4a'];
+  const PAL = ['#f8cf4a', '#f3c03a', '#e7a82a', '#ffe58a', '#d9971f', '#fff1b8'];   // только золото, разные оттенки
   const strands = [];
   pts.forEach(([x, y], i) => {
     if (i % 1) return;
