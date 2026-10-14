@@ -80,8 +80,20 @@ export function Garland() {
           </radialGradient>
           <filter id="gl-blur" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="5" /></filter>
         </defs>
-        {/* мишура */}
-        <path d={d} fill="none" stroke="#c48f1e" strokeWidth="14" strokeLinejoin="round" />
+        {/* мишура — красный градиент с переливом */}
+        <defs>
+          <linearGradient id="gl-tinsel" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={w + 2 * M} y2="0">
+            <stop offset="0%" stopColor="#b81a15" />
+            <stop offset="18%" stopColor="#e8352c" />
+            <stop offset="35%" stopColor="#f7706b" />
+            <stop offset="50%" stopColor="#ff9e9a" />
+            <stop offset="65%" stopColor="#f7706b" />
+            <stop offset="82%" stopColor="#e8352c" />
+            <stop offset="100%" stopColor="#b81a15" />
+          </linearGradient>
+        </defs>
+        <path d={d} fill="none" stroke="url(#gl-tinsel)" strokeWidth="14" strokeLinejoin="round" />
+        <path d={d} fill="none" stroke="url(#gl-tinsel)" strokeWidth="14" strokeLinejoin="round" opacity=".45" className="gl-tinsel-shimmer" />
         <g strokeWidth="1.8" strokeLinecap="round">
           {strands.map((t, i) => (
             <line key={i} x1={t.x.toFixed(1)} y1={t.y.toFixed(1)} x2={(t.x + t.dx).toFixed(1)} y2={(t.y + t.dy).toFixed(1)} stroke={t.c} />

@@ -1352,7 +1352,13 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 .gl-spark { opacity: 0; animation: gl-spark 2.4s ease-in-out infinite; }
 @keyframes gl-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .85; } }
 @keyframes gl-spark { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .gl-glow, .gl-spark { animation: none; opacity: .6; } }
+.gl-tinsel-shimmer { animation: gl-shimmer 3s ease-in-out infinite; }
+@keyframes gl-shimmer {
+  0%   { opacity: 0; filter: blur(0); }
+  50%  { opacity: .55; filter: blur(2px); }
+  100% { opacity: 0; filter: blur(0); }
+}
+@media (prefers-reduced-motion: reduce) { .gl-glow, .gl-spark, .gl-tinsel-shimmer { animation: none; opacity: .6; } }
 
 /* ───────── карта: финальная смена, значки новинок, эльф ───────── */
 .node.final button.node-img { width: 96px; height: 96px; padding: 0; }
