@@ -1376,3 +1376,8 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 .map-path { z-index: 2; }
 .node { z-index: 4; }
 .map-elf { z-index: 5; }
+/* точное центрирование: цифра — в центре диска кнопки, надпись — в центре доски таблички
+   (центры сняты с самих картинок: диск 50%/50%, доска 50%/47%) */
+.node button.node-img { padding: 0; display: grid; place-items: center; }
+.node button.node-img b { display: block; line-height: 1; translate: 0 1px; }
+.zone-sign b, .zone-residence .zone-sign b { left: 8%; right: 8%; top: 47%; line-height: 1.05; text-align: center; }
