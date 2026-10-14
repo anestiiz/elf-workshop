@@ -894,7 +894,7 @@ export default function App() {
   const tutStep = G.tut ? TUT[G.tut.step] : null;
 
   return (
-    <div className="app">
+    <div className={`app ${ASSETS.office_bg ? 'has-office' : ''}`} style={ASSETS.office_bg ? { '--office-bg': `url(${ASSETS.office_bg})` } : undefined}>
       <div className={`game ${ASSETS.bg ? 'has-bg' : ''} ${G.hand ? 'holding' : ''} ${G.trashMode ? 'trash-mode' : ''}`} ref={root}
         style={ASSETS.bg ? { backgroundImage: `url(${ASSETS.bg})` } : undefined}>
         <div className="garland" aria-hidden="true">
