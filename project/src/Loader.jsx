@@ -82,8 +82,10 @@ export default function Loader({ onDone, onStart }) {
         ))}
       </div>
       <div className="loader-panel">
-        <div className="eyebrow light">Мастерская Деда Мороза</div>
-        <h1 className="loader-title">Эльфийский цех</h1>
+        <div className="loader-head">
+          <div className="eyebrow light">Мастерская Деда Мороза</div>
+          <h1 className="loader-title">Эльфийский цех</h1>
+        </div>
         <div className="loader-action">
         {!ready ? (
           <>

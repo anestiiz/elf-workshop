@@ -1203,7 +1203,8 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 
 /* загрузка: блок поднят выше от края, место под полоску и кнопку одинаковое — заголовок не прыгает */
 .loader-panel { padding: 96px 24px calc(64px + env(safe-area-inset-bottom, 0px)); gap: 12px; }
-.loader-panel .loader-title { margin-bottom: 12px; }
+.loader-head { display: grid; gap: 12px; justify-items: center; }
+.loader-panel .loader-title { margin-bottom: 0; }
 .loader-action { width: 100%; min-height: 56px; display: grid; gap: 12px; justify-items: center; align-content: center; }
 
 /* карточки: группы отдельно — заголовок+описание (8px), контент (12px), кнопки (4px); между группами 16px */
