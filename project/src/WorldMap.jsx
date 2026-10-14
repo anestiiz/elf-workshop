@@ -183,7 +183,7 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onT
   const tapNode = (L) => {
     if (walking) return;
     if (L > unlocked) {
-      setToast({ L, text: L - 1 === MAP_LEVELS ? 'Сначала пройди все смены' : `Сначала пройди смену ${L - 1}` });
+      setToast({ L, text: L - 1 === MAP_LEVELS ? 'Сначала пройдите все смены' : `Сначала пройдите смену ${L - 1}` });
       setTimeout(() => setToast(null), 1400);
       return;
     }

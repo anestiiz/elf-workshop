@@ -130,10 +130,10 @@ function makeGame(L, demo = false, tutorial = false) {
 /* первое знакомство с новинкой — игра встаёт на паузу и объясняет */
 const INTROS = {
   urgent: { icon: '🎅', title: 'Срочный заказ!', text: 'Золотая карточка — заказ лично от Деда Мороза. Времени на него меньше, зато награда двойная.' },
-  freeze: { icon: '❄️', title: 'Волшебная снежинка', text: 'Нажми на снежинку на ленте — все заказы замёрзнут на 5 секунд, и время остановится.' },
-  magnet: { icon: '🧲', title: 'Магнит', text: 'Нажми на магнит — он сам притянет с ленты нужные детали и разложит их по ячейкам.' },
-  reverse: { icon: '↩️', title: 'Лента сломалась!', text: 'Иногда лента пару секунд едет назад. Не паникуй — детали скоро поедут обратно.' },
-  shuffle: { icon: '🌀', title: 'Детали перепутались!', text: 'Озорник перемешал всё, что едет по ленте. Смотри внимательно, что берёшь.' },
+  freeze: { icon: '❄️', title: 'Волшебная снежинка', text: 'Нажмите на снежинку на ленте — все заказы замёрзнут на 5 секунд, и время остановится.' },
+  magnet: { icon: '🧲', title: 'Магнит', text: 'Нажмите на магнит — он сам притянет с ленты нужные детали и разложит их по ячейкам.' },
+  reverse: { icon: '↩️', title: 'Лента сломалась!', text: 'Иногда лента пару секунд едет назад. Не переживайте — детали скоро поедут обратно.' },
+  shuffle: { icon: '🌀', title: 'Детали перепутались!', text: 'Озорник перемешал всё, что едет по ленте. Смотрите внимательно, что берёте.' },
 };
 
 function addOrder(g, toy, leftFrac = 1, urgent = false) {
@@ -487,7 +487,7 @@ export default function App() {
     if (G.hand && G.hand.mode === 'held') { dropInto(s); return; }
     if (slot.state === 'toy') { deliver(s); return; }
     if (slot.state === 'junk') {
-      addFloat(p.x, p.y - 26, 'Нажми на корзину, потом сюда', 'warn');
+      addFloat(p.x, p.y - 26, 'Нажмите на корзину, потом сюда', 'warn');
       G.trashPulse = G.t;
       sfx.nope();
     }
@@ -1083,7 +1083,7 @@ export default function App() {
                     style={ASSETS.slot ? { borderImageSource: `url(${ASSETS.slot})` } : undefined}
                     aria-label={`Ячейка ${s + 1}`}>
                     {slot.state === 'toy' ? (
-                      <span className="slot-toy"><ToySprite id={slot.toy} /><em>нажми</em></span>
+                      <span className="slot-toy"><ToySprite id={slot.toy} /><em>нажмите</em></span>
                     ) : (
                       <span className="sockets">
                         {[0, 1, 2].map((i) => (
@@ -1163,7 +1163,7 @@ export default function App() {
                 <div className="eyebrow">Мастерская Деда Мороза</div>
                 <div className="card-title">
                   <h1>Эльфийский цех</h1>
-                  <p className="lead">Дед Мороз и его эльфы собирают подарки для всех детей. Помоги им успеть к празднику!</p>
+                  <p className="lead">Дед Мороз и его эльфы собирают подарки для всех детей. Помогите им успеть к празднику!</p>
                 </div>
               </div>
               <div className="card-actions">

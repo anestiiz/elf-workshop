@@ -72,7 +72,7 @@ export default function Loader({ onDone, onStart }) {
   };
 
   return (
-    <div className={`loader ${leaving ? 'leaving' : ''} ${ready ? 'ready' : ''}`} onClick={go} role="button" aria-label="Нажми, чтобы начать">
+    <div className={`loader ${leaving ? 'leaving' : ''} ${ready ? 'ready' : ''}`} onClick={go} role="button" aria-label="Нажмите, чтобы начать">
       {ASSETS.loader
         ? <img className="loader-art" src={ASSETS.loader} alt="" draggable={false} />
         : <div className="loader-art fallback">🧝🎁</div>}
@@ -96,7 +96,7 @@ export default function Loader({ onDone, onStart }) {
           </>
         ) : (
           <SnowButton variant="wide" className="loader-go-wrap">
-            <MTSButton variant="primary" size={52} fluid className="btn primary loader-go" onClick={(e) => { e.stopPropagation(); go(); }}>Нажми, чтобы начать</MTSButton>
+            <MTSButton variant="primary" size={52} fluid className="btn primary loader-go" onClick={(e) => { e.stopPropagation(); go(); }}>Нажмите, чтобы начать</MTSButton>
           </SnowButton>
         )}
         </div>
