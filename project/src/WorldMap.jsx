@@ -280,8 +280,8 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
           })}
 
           <div className={`map-elf ${walking ? 'walking' : ''}`} style={{ left: px(elfP.x), top: elfP.y }} aria-hidden="true">
-            {ASSETS.map_elf_walk || ASSETS.elf_happy
-              ? <img src={ASSETS.map_elf_walk || (walking ? ASSETS.elf_happy : ASSETS.elf_idle || ASSETS.elf_happy)} alt="" />
+            {ASSETS.elf_happy
+              ? <img src={walking ? ASSETS.elf_happy : ASSETS.elf_idle || ASSETS.elf_happy} alt="" />
               : <span>🧝</span>}
           </div>
 
