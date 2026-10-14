@@ -120,7 +120,7 @@ const FLAKES = Array.from({ length: 28 }, (_, i) => ({
   left: `${(i * 37) % 100}%`, delay: `${(i * 0.53) % 8}s`, dur: `${7 + (i % 5) * 1.6}s`, size: 3 + (i % 4) * 2,
 }));
 
-export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
+export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onTourDone }) {
   const scroller = useRef(null);
   const [W, setW] = useState(390);
   const layout = buildLayout(W);
@@ -133,13 +133,33 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
   const [walking, setWalking] = useState(false);
   const [toast, setToast] = useState(null);
 
+  const [touring, setTouring] = useState(false);
+
   useLayoutEffect(() => {
     const el = scroller.current;
     if (!el) return;
     setW(el.clientWidth);
-    // прокрутка к текущей смене
-    const p = nodePos(elfAt);
-    el.scrollTop = Math.max(0, p.y - el.clientHeight * 0.6);
+
+    const targetY = Math.max(0, nodePos(elfAt).y - el.clientHeight * 0.6);
+
+    if (!save.tourDone) {
+      // первый заход — экскурсия: начинаем снизу
+      el.scrollTop = el.scrollHeight;
+      setTouring(true);
+
+      // 1) плавно наверх (к резиденции)
+      setTimeout(() => el.scrollTo({ top: 0, behavior: 'smooth' }), 400);
+      // 2) потом обратно к текущей смене
+      const dur = Math.min(2800, el.scrollHeight / 1.5); // ~скорость прокрутки
+      setTimeout(() => el.scrollTo({ top: targetY, behavior: 'smooth' }), 400 + dur + 600);
+      setTimeout(() => {
+        setTouring(false);
+        if (onTourDone) onTourDone();
+      }, 400 + dur + 600 + 1500);
+    } else {
+      // обычный заход — сразу к текущей смене
+      el.scrollTop = targetY;
+    }
   }, []);
 
   useEffect(() => {

@@ -1200,7 +1200,8 @@ export default function App() {
 
         {screen === 'map' && (
           <WorldMap save={save} walkFrom={mapWalkFrom}
-            onPlay={(L) => start(L)} onBack={toMenu} onWalked={() => setMapWalkFrom(0)} />
+            onPlay={(L) => start(L)} onBack={toMenu} onWalked={() => setMapWalkFrom(0)}
+            onTourDone={() => { const next = { ...saveRef.current, tourDone: true }; setSave(next); writeSave(next); }} />
         )}
 
         {screen === 'paused' && (
