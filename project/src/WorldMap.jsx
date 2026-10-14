@@ -54,7 +54,7 @@ const ZONE_ART = {
     sign: [0.50, 0.93],
   },
   residence: {
-    img: 'map_zone_residence', ratio: 1080 / 1620,
+    img: 'map_zone_residence', ratio: 1350 / 900,
     nodes: [[0.50, 0.72]],
     sign: [0.30, 0.88],
   },

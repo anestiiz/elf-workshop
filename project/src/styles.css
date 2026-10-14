@@ -52,13 +52,6 @@ button:focus-visible { outline: 3px solid var(--brass); outline-offset: 2px; }
     radial-gradient(800px 500px at 50% 120%, #2a1a12 0%, transparent 60%),
     var(--night);
 }
-.app.has-office {
-  background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(35,66,58,0.6) 0%, transparent 60%),
-    radial-gradient(800px 500px at 50% 120%, rgba(42,26,18,0.7) 0%, transparent 60%),
-    var(--office-bg) center top / cover no-repeat,
-    var(--night);
-}
 
 .game {
   position: relative;
