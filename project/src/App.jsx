@@ -1173,7 +1173,7 @@ export default function App() {
                 </MTSButton>
               </SnowButton>
               {save.tutorialDone && <MTSButton variant="ghost" size={52} fluid className="btn ghost" onClick={startTutorial}>Пройти обучение</MTSButton>}
-              <button className="link" onClick={toggleMute}>{muted ? 'Звук выключен' : 'Звук включён'}</button>
+              <p className="sound-hint">Включите звук для полного погружения в праздничную атмосферу 🎄</p>
               </div>
             </div>
           </div>
@@ -1217,7 +1217,6 @@ export default function App() {
               <SnowButton variant="wide"><MTSButton variant="primary" size={52} fluid className="btn primary" onClick={() => setScreen('play')}>Продолжить</MTSButton></SnowButton>
               <MTSButton variant="secondary" size={52} fluid className="btn" onClick={() => start(G.L)}>Начать заново</MTSButton>
               <MTSButton variant="ghost" size={52} fluid className="btn ghost" onClick={() => toMap()}>На карту</MTSButton>
-              <button className="link" onClick={toggleMute}>{muted ? 'Звук выключен' : 'Звук включён'}</button>
               </div>
             </div>
           </div>
