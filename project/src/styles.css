@@ -1274,7 +1274,7 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 @keyframes go-pulse-soft { 50% { transform: scale(1.03); } }
 
 /* шапка карточки: надзаголовок отдельно, заголовок + описание — своим блоком */
-.card-head { gap: 4px; }
+.card-head { gap: 12px; }
 .card-title { display: grid; gap: 8px; justify-items: center; }
 
 /* ───────── карточки: гирлянда сверху вместо полосок, светлее плашка ───────── */
