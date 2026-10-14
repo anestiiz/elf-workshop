@@ -1,0 +1,37 @@
+/* Раскладка страницы на платформе: хедер МТС сверху, игра занимает всё остальное */
+html, body, #root { height: 100%; margin: 0; }
+.lp-page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: #1a0d0a; }
+.lp-page > .header { flex: none; }
+.lp-game { position: relative; flex: 1; min-height: 0; }
+.lp-game > .app { height: 100%; }
+.header .container { width: 100%; margin: 0 auto; }
+
+/* MTS Compact — для хедера МТС (как в лендингах платформы) */
+@font-face {
+    font-family: MTS Compact;
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Regular.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Regular.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Regular.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Regular.woff) format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Compact;
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Medium.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Medium.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Medium.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Medium.woff) format("woff");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Compact;
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Bold.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Bold.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Bold.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Bold.woff) format("woff");
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Compact;
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Black.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Black.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Black.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Compact/MTSCompact-Black.woff) format("woff");
+    font-weight: 900;
+    font-style: normal;
+}

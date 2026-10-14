@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <title>Эльфийский цех</title>
+    <meta charset="UTF-8" />
+    <meta name="color-scheme" content="only light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#1a0d0a">
+    <style>
+      :root,
+      html,
+      body,
+      #root {
+        color-scheme: only light;
+        forced-color-adjust: none;
+      }
+      html, body, #root { height: 100%; margin: 0; background: #1a0d0a; }
+    </style>
+    <meta data-personal-version href="/" type="text/plain">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ff0032">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <script>
+    const personalVersion = document.querySelector('meta[data-personal-version][href*="/"]');
+
+    if (personalVersion) {
+              const href = personalVersion.getAttribute('href');
+              const basePath = href.substring(0, href.lastIndexOf('/') + 1);
+              window.BASE_STATIC_URL = basePath;
+
+              if (window.BASE_STATIC_URL.includes('https://static2.mts.ru/structures/personal')) {
+                window.ENV = 'PROD';
+              } else {
+                window.ENV = 'DEV';
+              }
+              console.log('Current environment:', window.ENV);
+    }
+
+    if (window.ENV === 'PROD') {
+            const PersonalData = `{{data}}`
+              .replace(/'/g, '');
+            var LP_DATA = JSON.parse(PersonalData);
+
+          } else {
+            // For non-production environments, use the default object
+            var LP_DATA = {
+              "render_mode": "authorized",
+              "request": {
+                "trace_id": "1",
+                "session_id": "1"
+              }
+            };
+    }
+
+  </script>
+  <script src='https://identitystatic.mts.ru/eco-header/profile-widget-b2c/current/profile-widget.bundle.js'></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

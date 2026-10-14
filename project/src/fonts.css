@@ -1,0 +1,64 @@
+/* Шрифты МТС со статики (как в global.css лендингов): MTS Text — тексты, MTS Wide — заголовки */
+@font-face {
+    font-family: MTS Text;
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Regular.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Regular.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Regular.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Regular.woff) format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Text;
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Medium.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Medium.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Medium.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Medium.woff) format("woff");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Text;
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Bold.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Bold.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Bold.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Bold.woff) format("woff");
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Text;
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Black.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Black.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Black.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Text/MTSText-Black.woff) format("woff");
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Wide;
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.woff) format("woff");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Wide;
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Regular.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Regular.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Regular.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Regular.woff) format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Wide;
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Medium.woff) format("woff");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Wide;
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Bold.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Bold.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Bold.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Bold.woff) format("woff");
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: MTS Wide;
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Black.eot);
+    src: url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Black.eot#iefix) format("embedded-opentype"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Black.woff2) format("woff2"), url(https://static2.mts.ru/structures/source/fonts/Wide/MTSWide-Black.woff) format("woff");
+    font-weight: 900;
+    font-style: normal;
+}
