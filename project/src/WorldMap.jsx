@@ -30,8 +30,44 @@ const NEWS = {
 
 export const levelTitle = (L) => (L === MAP_LEVELS ? 'Новогодняя ночь' : `Смена ${L}`);
 
-function nodePos(L, H) {
-  return { x: XS[(L - 1) % XS.length], y: H - PAD_BOTTOM - (L - 1) * STEP };
+// Нарисованные зоны: фон-картинка во всю ширину, точки смен — в долях картинки (x, y от верхнего края).
+// Пока картинки нет — зона рисуется заглушкой (холмы и эмодзи) со старыми отступами.
+const ZONE_ART = {
+  workshop: {
+    img: 'map_zone_workshop', ratio: 1620 / 1080,
+    nodes: [[0.55, 0.80], [0.73, 0.53], [0.71, 0.26]],   // смены 1, 2, 3 — на расчищенной дорожке
+    sign: [0.25, 0.905],                                     // табличка «Цех игрушек» — на снегу внизу слева
+  },
+};
+const artOf = (z) => (ZONE_ART[z.key] && ASSETS[ZONE_ART[z.key].img] ? ZONE_ART[z.key] : null);
+
+// раскладка карты снизу вверх: высота каждой зоны и координаты всех точек
+function buildLayout(W) {
+  const pos = {}, zones = {};
+  let bottom = 0;            // считаем от низа карты вверх (в px), потом перевернём
+  const tmp = [];
+  ZONES.forEach((z, zi) => {
+    const art = artOf(z);
+    const n = z.to - z.from + 1;
+    let h;
+    if (art) {
+      h = W * art.ratio;
+      for (let i = 0; i < n; i++) {
+        const [xf, yf] = art.nodes[i] || [0.5, 1 - (i + 0.5) / n];
+        tmp.push({ L: z.from + i, x: xf * 100, fromBottom: bottom + (1 - yf) * h });
+      }
+    } else {
+      const first = zi === 0 ? PAD_BOTTOM : STEP * 0.5;
+      h = first + (n - 1) * STEP + STEP * 0.5 + (z.key === 'residence' ? PAD_TOP : 0);
+      for (let i = 0; i < n; i++) tmp.push({ L: z.from + i, x: XS[(z.from + i - 1) % XS.length], fromBottom: bottom + first + i * STEP });
+    }
+    zones[z.key] = { fromBottom: bottom, h, art };
+    bottom += h;
+  });
+  const H = Math.round(bottom);
+  tmp.forEach((t) => { pos[t.L] = { x: t.x, y: H - t.fromBottom }; });
+  Object.values(zones).forEach((zz) => { zz.top = H - zz.fromBottom - zz.h; });
+  return { H, pos, zones };
 }
 
 // плавная дорожка через все точки (Catmull-Rom → кубические кривые)
@@ -67,7 +103,9 @@ const FLAKES = Array.from({ length: 28 }, (_, i) => ({
 export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
   const scroller = useRef(null);
   const [W, setW] = useState(390);
-  const H = PAD_BOTTOM + (MAP_LEVELS - 1) * STEP + PAD_TOP;
+  const layout = buildLayout(W);
+  const H = layout.H;
+  const nodePos = (L) => layout.pos[L];
   const unlocked = Math.min(save.unlocked, MAP_LEVELS);
   const allDone = save.unlocked > MAP_LEVELS;
   // эльф стоит на walkFrom и идёт к текущей смене
@@ -80,7 +118,7 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
     if (!el) return;
     setW(el.clientWidth);
     // прокрутка к текущей смене
-    const p = nodePos(elfAt, H);
+    const p = nodePos(elfAt);
     el.scrollTop = Math.max(0, p.y - el.clientHeight * 0.6);
   }, []);
 
@@ -90,16 +128,16 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
       setWalking(true);
       setElfAt(unlocked);
       const el = scroller.current;
-      if (el) el.scrollTo({ top: Math.max(0, nodePos(unlocked, H).y - el.clientHeight * 0.6), behavior: 'smooth' });
+      if (el) el.scrollTo({ top: Math.max(0, nodePos(unlocked).y - el.clientHeight * 0.6), behavior: 'smooth' });
     }, 650);
     const t2 = setTimeout(() => { setWalking(false); onWalked && onWalked(); }, 650 + 1500);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const px = (pct) => (pct / 100) * W;
-  const points = Array.from({ length: MAP_LEVELS }, (_, i) => { const p = nodePos(i + 1, H); return { x: px(p.x), y: p.y }; });
+  const points = Array.from({ length: MAP_LEVELS }, (_, i) => { const p = nodePos(i + 1); return { x: px(p.x), y: p.y }; });
   const doneIdx = Math.max(0, Math.min(unlocked, MAP_LEVELS) - 1);
-  const elfP = nodePos(elfAt, H);
+  const elfP = nodePos(elfAt);
   const totalStars = Object.values(save.stars || {}).reduce((a, b) => a + b, 0);
 
   const tapNode = (L) => {
@@ -130,28 +168,32 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
               {/* земля зон: широкие холмы во всю ширину, у каждой зоны свой оттенок */}
               <svg className="map-ground" width={W} height={H}>
                 {ZONES.slice().reverse().map((z) => {
-                  const topY = nodePos(z.to, H).y - STEP * 0.62;
+                  if (layout.zones[z.key].art) return null;
+                  const topY = layout.zones[z.key].top + 20;
                   const amp = 26, w = W;
                   const d = `M 0 ${topY + amp} C ${w * 0.25} ${topY - amp}, ${w * 0.45} ${topY + amp * 1.4}, ${w * 0.7} ${topY} S ${w} ${topY - amp * 0.4}, ${w} ${topY + amp * 0.4} L ${w} ${H} L 0 ${H} Z`;
                   return <path key={z.key} d={d} className={`ground ground-${z.key}`} />;
                 })}
               </svg>
               {DECOR.map((dc, i) => {
-                const p = nodePos(dc.L, H);
+                const zk = ZONES.find((z) => dc.L >= z.from && dc.L <= z.to).key;
+                if (layout.zones[zk].art) return null;
+                const p = nodePos(dc.L);
                 const pathX = XS[(dc.L - 1) % XS.length];
                 const x = pathX > 50 ? dc.x : 100 - dc.x;   // всегда со стороны, свободной от дорожки
                 return <span key={i} className="decor" style={{ left: `${x}%`, top: p.y + dc.dy, fontSize: dc.s }}>{dc.e}</span>;
               })}
-              {ZONES.filter((z) => z.from !== MAP_LEVELS).map((z) => {
+              {ZONES.filter((z) => z.from !== MAP_LEVELS && !layout.zones[z.key].art).map((z) => {
                 // табличка стоит на гребне холма своей зоны, со стороны, свободной от точек и подписей
-                const y = z.from === 1 ? nodePos(1, H).y + 78 : nodePos(z.from - 1, H).y - STEP * 0.62 - 4;
+                const zz = layout.zones[z.key];
+                const y = z.from === 1 ? nodePos(1).y + 78 : zz.top + zz.h - 4;
                 return (
                   <span key={z.key} className={`zone-label ${LABEL_SIDE[z.key]}`} style={{ top: y }}>
                     {ASSETS[`map_${z.key}`] ? <img src={ASSETS[`map_${z.key}`]} alt="" /> : <i>{z.icon}</i>}{z.name}
                   </span>
                 );
               })}
-              <div className="residence" style={{ top: nodePos(MAP_LEVELS, H).y - 215 }}>
+              <div className="residence" style={{ top: nodePos(MAP_LEVELS).y - 215 }}>
                 {ASSETS.map_residence ? <img src={ASSETS.map_residence} alt="" /> : <span>🏰</span>}
                 <b>Резиденция Деда Мороза</b>
               </div>
@@ -160,6 +202,22 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
               ))}
             </div>
           )}
+
+          {/* нарисованные зоны: фон + табличка с названием */}
+          {ZONES.map((z) => {
+            const zz = layout.zones[z.key];
+            if (!zz.art) return null;
+            return (
+              <div key={`art-${z.key}`} className="zone-art" style={{ top: zz.top, height: zz.h }} aria-hidden="true">
+                <img className="zone-bg" src={ASSETS[zz.art.img]} alt="" draggable={false} />
+                {zz.art.sign && (
+                  <span className="zone-sign" style={{ left: `${zz.art.sign[0] * 100}%`, top: `${zz.art.sign[1] * 100}%`, backgroundImage: ASSETS.map_sign ? `url(${ASSETS.map_sign})` : undefined }}>
+                    <b>{z.name}</b>
+                  </span>
+                )}
+              </div>
+            );
+          })}
 
           <svg className="map-path" width={W} height={H} aria-hidden="true">
             <path d={pathD(points)} className="path-base" />
@@ -174,9 +232,17 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
             const news = NEWS[L];
             return (
               <div key={L} className={`node node-${state} ${L === MAP_LEVELS ? 'final' : ''}`} style={{ left: p.x, top: p.y }}>
-                <button onClick={() => tapNode(L)} aria-label={`${levelTitle(L)}${state === 'locked' ? ', закрыта' : ''}`}>
-                  {state === 'locked' ? <span className="lock">🔒</span> : <b>{L === MAP_LEVELS ? '🎄' : L}</b>}
-                </button>
+                {(() => {
+                  const img = L !== MAP_LEVELS && ASSETS[`map_node_${state}`];
+                  return (
+                    <button onClick={() => tapNode(L)} aria-label={`${levelTitle(L)}${state === 'locked' ? ', закрыта' : ''}`}
+                      className={img ? 'node-img' : ''} style={img ? { backgroundImage: `url(${img})` } : undefined}>
+                      {state === 'locked'
+                        ? (img ? null : <span className="lock">🔒</span>)
+                        : <b>{L === MAP_LEVELS ? '🎄' : L}</b>}
+                    </button>
+                  );
+                })()}
                 {state !== 'locked' && (
                   <div className="node-stars">
                     {[0, 1, 2].map((k) => (ASSETS.ui_star
@@ -198,7 +264,7 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked }) {
           </div>
 
           {allDone && (
-            <div className="map-final" style={{ top: nodePos(MAP_LEVELS, H).y - 150 }}>
+            <div className="map-final" style={{ top: nodePos(MAP_LEVELS).y - 150 }}>
               Новый год спасён! 🎉
             </div>
           )}
