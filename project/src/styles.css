@@ -1334,7 +1334,10 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 @keyframes node-pulse-img { 50% { transform: scale(1.08); filter: drop-shadow(0 0 14px rgba(255, 210, 90, 0.95)) drop-shadow(0 6px 6px rgba(30, 40, 70, 0.35)); } }
 
 /* верх нарисованной зоны растворяется в соседнюю — без резкой границы */
-.zone-art .zone-bg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 9%); mask-image: linear-gradient(180deg, transparent 0, #000 9%); }
+.zone-art .zone-bg {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
 /* надпись — по центру доски, ниже снежной шапки */
 .zone-sign { display: block; padding: 0; }
 .zone-sign b { position: absolute; left: 12%; right: 12%; top: 56%; translate: 0 -50%; display: block; }
@@ -1361,13 +1364,12 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 .node-badge img { width: 40px; height: 40px; object-fit: contain; }
 .node-badge.right { left: 30px; }
 .node-badge.left { right: 30px; }
-.map-elf img { height: 78px; width: auto; }
+.map-elf img { height: 110px; width: auto; }
 .intro-card .intro-icon img { width: 96px; height: 96px; object-fit: contain; display: block; margin: 0 auto; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.2)); }
 
 .map-world { background-color: #eef3fa; }
 .zone-sign b { font-size: 12px; }
-.zone-residence .zone-sign { width: 190px; }
-.zone-residence .zone-sign { width: 230px; }
+.zone-residence .zone-sign { width: 270px; }
 .zone-residence .zone-sign b { font-size: 12px; line-height: 1.05; top: 57%; }
 /* таблички зон — поверх дорожки, кнопки смен — поверх табличек */
 .zone-art { z-index: auto; }

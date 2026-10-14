@@ -54,9 +54,9 @@ const ZONE_ART = {
     sign: [0.50, 0.93],
   },
   residence: {
-    img: 'map_zone_residence', ratio: 1620 / 1080,
-    nodes: [[0.50, 0.62]],
-    sign: [0.30, 0.80],
+    img: 'map_zone_residence', ratio: 1080 / 1620,
+    nodes: [[0.50, 0.72]],
+    sign: [0.30, 0.88],
   },
 };
 const artOf = (z) => (ZONE_ART[z.key] && ASSETS[ZONE_ART[z.key].img] ? ZONE_ART[z.key] : null);
