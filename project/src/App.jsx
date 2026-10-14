@@ -9,6 +9,7 @@ import { ASSETS } from './assets.js';
 music.init(ASSETS.music_bg, ASSETS.music_bg_fallback);
 import { Pause, VolumeMax, VolumeMute, Speed } from './icons.jsx';
 import { SnowButton } from './components/SnowButton/SnowButton.jsx';
+import { Garland } from './components/Garland/Garland.jsx';
 
 /* ───────────────── сохранение ───────────────── */
 const SAVE_KEY = 'elf-workshop-v3';
@@ -1157,6 +1158,7 @@ export default function App() {
         {screen === 'menu' && (
           <div className="overlay">
             <div className="card menu">
+              <Garland />
               <div className="card-head">
                 <div className="eyebrow">Мастерская Деда Мороза</div>
                 <div className="card-title">
@@ -1180,6 +1182,7 @@ export default function App() {
         {screen === 'intro' && intro && (
           <div className="overlay">
             <div className="card small intro-card">
+              <Garland />
               <div className="card-head">
                 <div className="intro-icon">{intro.icon}</div>
                 <div className="eyebrow">Новинка</div>
@@ -1203,6 +1206,7 @@ export default function App() {
         {screen === 'paused' && (
           <div className="overlay">
             <div className="card small">
+              <Garland />
               <div className="card-head">
                 <div className="card-title">
                   <h2>Перерыв на какао</h2>
@@ -1222,6 +1226,7 @@ export default function App() {
         {screen === 'result' && result && (
           <div className="overlay result-ov">
             <div className={`card result ${result.won ? 'won' : 'lost'}`}>
+              <Garland />
               <div className="card-head">
                 <div className="eyebrow">{levelTitle(result.L)}</div>
                 <div className="card-title">

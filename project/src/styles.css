@@ -1338,3 +1338,13 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 /* надпись — по центру доски, ниже снежной шапки */
 .zone-sign { display: block; padding: 0; }
 .zone-sign b { position: absolute; left: 12%; right: 12%; top: 56%; translate: 0 -50%; display: block; }
+
+/* ───────── гирлянда-компонент (вместо CSS-гирлянды) ───────── */
+.card::before, .card::after { content: none; background: none; animation: none; }
+.card-garland { position: absolute; left: -16px; top: -16px; z-index: 3; pointer-events: none; line-height: 0; }
+.card-garland svg { overflow: visible; display: block; }
+.gl-glow { opacity: .55; animation: gl-twinkle 1.6s ease-in-out infinite; }
+.gl-spark { opacity: 0; animation: gl-spark 2.4s ease-in-out infinite; }
+@keyframes gl-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .85; } }
+@keyframes gl-spark { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gl-glow, .gl-spark { animation: none; opacity: .6; } }
