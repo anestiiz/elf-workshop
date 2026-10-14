@@ -1297,3 +1297,5 @@ h1, h2, h3, h4, .eyebrow, .timer, .score span, .shift, .speed, .banner, .stamp, 
 @media (prefers-reduced-motion: reduce) { .card::after { animation: none; opacity: .7; } }
 /* целое число лампочек по ширине — без обрезанной на краю */
 .card::before, .card::after { background-repeat: round no-repeat; }
+/* внутренние отступы карточки: сверху 32, по бокам 32 */
+.card { padding: 32px 32px 24px; }
