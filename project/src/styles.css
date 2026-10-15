@@ -1064,8 +1064,6 @@ img.sprite { width: 1.15em; height: 1.15em; object-fit: contain; vertical-align:
 @keyframes snowfall { to { transform: translateY(3200px); } }
 
 .map-path { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
-.path-base { fill: none; stroke: rgba(80,110,160,0.35); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 2 16; }
-.path-done { fill: none; stroke: #f0c255; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 2 16; filter: drop-shadow(0 0 4px rgba(240,194,85,0.8)); }
 
 .node { position: absolute; width: 0; height: 0; z-index: 2; }
 .node button {

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ASSETS } from './assets.js';
 import { levelCfg } from './data.js';
 
@@ -103,6 +103,37 @@ function pathD(points) {
   return d;
 }
 
+// сэмплируем точки вдоль Catmull-Rom сплайна с равным шагом → следы на снегу
+function samplePath(pts, spacing) {
+  if (pts.length < 2) return [];
+  const sub = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+    const c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+    const N = 40;
+    for (let j = (i === 0 ? 0 : 1); j <= N; j++) {
+      const t = j / N, u = 1 - t;
+      sub.push({
+        x: u * u * u * p1.x + 3 * u * u * t * c1x + 3 * u * t * t * c2x + t * t * t * p2.x,
+        y: u * u * u * p1.y + 3 * u * u * t * c1y + 3 * u * t * t * c2y + t * t * t * p2.y,
+        seg: i,
+      });
+    }
+  }
+  const result = [];
+  let accum = spacing * 0.5;
+  for (let k = 1; k < sub.length; k++) {
+    const dx = sub[k].x - sub[k - 1].x, dy = sub[k].y - sub[k - 1].y;
+    accum += Math.hypot(dx, dy);
+    if (accum >= spacing) {
+      accum -= spacing;
+      result.push({ x: sub[k].x, y: sub[k].y, angle: Math.atan2(dy, dx), seg: sub[k].seg });
+    }
+  }
+  return result;
+}
+
 const LABEL_SIDE = { workshop: 'left', post: 'right', reindeer: 'right', mountains: 'left' };
 
 // декорации зон (эмодзи-заглушки, пока нет нарисованного фона карты)
@@ -177,6 +208,21 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onT
   const px = (pct) => (pct / 100) * W;
   const points = Array.from({ length: MAP_LEVELS }, (_, i) => { const p = nodePos(i + 1); return { x: px(p.x), y: p.y }; });
   const doneIdx = Math.max(0, Math.min(unlocked, MAP_LEVELS) - 1);
+  // следы на снегу — овалы вдоль единого пути, чередуясь лево/право
+  const stepMarks = useMemo(() => {
+    const marks = samplePath(points, 20);
+    return marks.map((m, i) => {
+      const side = i % 2 === 0 ? -1 : 1;
+      const perp = m.angle + Math.PI / 2;
+      const off = 4.5;
+      return {
+        cx: m.x + Math.cos(perp) * off * side,
+        cy: m.y + Math.sin(perp) * off * side,
+        deg: m.angle * 180 / Math.PI,
+        done: m.seg < doneIdx,
+      };
+    });
+  }, [W, unlocked]);
   const elfP = nodePos(elfAt);
   const totalStars = Object.values(save.stars || {}).reduce((a, b) => a + b, 0);
 
@@ -260,8 +306,25 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onT
           })}
 
           <svg className="map-path" width={W} height={H} aria-hidden="true">
-            <path d={pathD(points)} className="path-base" />
-            <path d={pathD(points.slice(0, doneIdx + 1))} className="path-done" />
+            <defs>
+              <filter id="step-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="0" stdDeviation="2.5" floodColor="#f0c255" floodOpacity="0.75" />
+              </filter>
+            </defs>
+            {/* серые (впереди) */}
+            {stepMarks.filter(s => !s.done).map((s, i) => (
+              <ellipse key={`l${i}`} cx={s.cx} cy={s.cy} rx={5.5} ry={3}
+                transform={`rotate(${s.deg},${s.cx},${s.cy})`}
+                fill="rgba(120,145,190,0.3)" />
+            ))}
+            {/* золотые (пройденные) */}
+            <g filter="url(#step-glow)">
+              {stepMarks.filter(s => s.done).map((s, i) => (
+                <ellipse key={`d${i}`} cx={s.cx} cy={s.cy} rx={5.5} ry={3}
+                  transform={`rotate(${s.deg},${s.cx},${s.cy})`}
+                  fill="#f0c255" stroke="rgba(190,140,30,0.45)" strokeWidth={0.7} />
+              ))}
+            </g>
           </svg>
 
           {points.map((p, i) => {
