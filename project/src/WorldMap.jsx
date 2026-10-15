@@ -3,20 +3,20 @@ import { ASSETS } from './assets.js';
 import { levelCfg } from './data.js';
 
 // 12 смен — путь по Северному полюсу снизу вверх.
-export const MAP_LEVELS = 12;
+export const MAP_LEVELS = 9;
 const STEP = 132;            // расстояние между точками по вертикали, px
 const PAD_BOTTOM = 150;      // отступ снизу до первой точки
 const PAD_TOP = 230;         // место сверху под резиденцию
 
 // x в процентах ширины карты — дорожка петляет змейкой
-const XS = [50, 70, 74, 54, 30, 24, 42, 66, 76, 58, 36, 50];
+const XS = [50, 70, 54, 30, 42, 66, 76, 58, 50];
 
 export const ZONES = [
-  { from: 1, to: 3, key: 'workshop', name: 'Цех игрушек', icon: '🧸', sky: '#1d3b5c', ground: '#e9f3fb' },
-  { from: 4, to: 6, key: 'post', name: 'Почта Деда Мороза', icon: '✉️', sky: '#25335e', ground: '#eef0fb' },
-  { from: 7, to: 9, key: 'reindeer', name: 'Оленья ферма', icon: '🦌', sky: '#2a2a5a', ground: '#f1eefa' },
-  { from: 10, to: 11, key: 'mountains', name: 'Ледяные горы', icon: '🏔️', sky: '#1e2550', ground: '#e8f2ff' },
-  { from: 12, to: 12, key: 'residence', name: 'Резиденция Деда Мороза', icon: '🏰', sky: '#161c40', ground: '#f4f0ff' },
+  { from: 1, to: 2, key: 'workshop', name: 'Цех игрушек', icon: '🧸', sky: '#1d3b5c', ground: '#e9f3fb' },
+  { from: 3, to: 4, key: 'post', name: 'Почта Деда Мороза', icon: '✉️', sky: '#25335e', ground: '#eef0fb' },
+  { from: 5, to: 6, key: 'reindeer', name: 'Оленья ферма', icon: '🦌', sky: '#2a2a5a', ground: '#f1eefa' },
+  { from: 7, to: 8, key: 'mountains', name: 'Ледяные горы', icon: '🏔️', sky: '#1e2550', ground: '#e8f2ff' },
+  { from: 9, to: 9, key: 'residence', name: 'Резиденция Деда Мороза', icon: '🏰', sky: '#161c40', ground: '#f4f0ff' },
 ];
 
 // что нового на смене — значок на карте
@@ -25,7 +25,7 @@ const NEWS = {
   3: { icon: '❄️', img: 'icon_freeze', text: 'Бонусы на ленте' },
   4: { icon: '↩️', img: 'icon_reverse', text: 'Помехи' },
   5: { icon: '🌀', img: 'icon_shuffle', text: 'Детали путаются' },
-  12: { icon: '🎄', text: 'Новогодняя ночь' },
+  9: { icon: '🎄', text: 'Новогодняя ночь' },
 };
 
 export const levelTitle = (L) => (L === MAP_LEVELS ? 'Новогодняя ночь' : `Смена ${L}`);
@@ -35,17 +35,17 @@ export const levelTitle = (L) => (L === MAP_LEVELS ? 'Новогодняя но�
 const ZONE_ART = {
   workshop: {
     img: 'map_zone_workshop', ratio: 1620 / 1080,
-    nodes: [[0.55, 0.80], [0.73, 0.53], [0.71, 0.26]],   // смены 1, 2, 3 — на расчищенной дорожке
-    sign: [0.25, 0.905],                                    // табличка — на снегу внизу слева
+    nodes: [[0.55, 0.75], [0.71, 0.30]],
+    sign: [0.25, 0.905],
   },
   post: {
     img: 'map_zone_post', ratio: 1620 / 1080,
-    nodes: [[0.42, 0.80], [0.30, 0.53], [0.38, 0.24]],
+    nodes: [[0.42, 0.75], [0.38, 0.28]],
     sign: [0.74, 0.90],
   },
   reindeer: {
     img: 'map_zone_reindeer', ratio: 1620 / 1080,
-    nodes: [[0.62, 0.80], [0.70, 0.52], [0.62, 0.24]],
+    nodes: [[0.62, 0.75], [0.62, 0.28]],
     sign: [0.28, 0.90],
   },
   mountains: {
@@ -138,13 +138,13 @@ const LABEL_SIDE = { workshop: 'left', post: 'right', reindeer: 'right', mountai
 
 // декорации зон (эмодзи-заглушки, пока нет нарисованного фона карты)
 const DECOR = [
-  { L: 1, x: 14, dy: -30, e: '🎁', s: 38 }, { L: 2, x: 10, dy: 10, e: '🧸', s: 40 }, { L: 3, x: 16, dy: -20, e: '🪀', s: 32 },
-  { L: 1, x: 30, dy: 30, e: '🌲', s: 44 }, { L: 3, x: 6, dy: 40, e: '🌲', s: 36 },
-  { L: 4, x: 12, dy: -10, e: '📮', s: 40 }, { L: 5, x: 8, dy: 20, e: '✉️', s: 30 }, { L: 6, x: 14, dy: -30, e: '📦', s: 36 },
-  { L: 5, x: 22, dy: -40, e: '🌲', s: 40 },
-  { L: 7, x: 12, dy: -50, e: '🦌', s: 44 }, { L: 8, x: 12, dy: -20, e: '🛷', s: 40 }, { L: 9, x: 8, dy: 20, e: '🌲', s: 46 },
-  { L: 9, x: 22, dy: -30, e: '🌲', s: 34 },
-  { L: 10, x: 14, dy: -55, e: '🏔️', s: 54 }, { L: 11, x: 14, dy: 20, e: '⛷️', s: 34 }, { L: 11, x: 6, dy: -40, e: '❄️', s: 26 },
+  { L: 1, x: 14, dy: -30, e: '🎁', s: 38 }, { L: 2, x: 10, dy: 10, e: '🧸', s: 40 },
+  { L: 1, x: 30, dy: 30, e: '🌲', s: 44 }, { L: 2, x: 6, dy: 40, e: '🌲', s: 36 },
+  { L: 3, x: 12, dy: -10, e: '📮', s: 40 }, { L: 4, x: 14, dy: -30, e: '📦', s: 36 },
+  { L: 3, x: 22, dy: -40, e: '🌲', s: 40 },
+  { L: 5, x: 12, dy: -50, e: '🦌', s: 44 }, { L: 6, x: 12, dy: -20, e: '🛷', s: 40 },
+  { L: 6, x: 22, dy: -30, e: '🌲', s: 34 },
+  { L: 7, x: 14, dy: -55, e: '🏔️', s: 54 }, { L: 8, x: 14, dy: 20, e: '⛷️', s: 34 }, { L: 8, x: 6, dy: -40, e: '❄️', s: 26 },
 ];
 
 const FLAKES = Array.from({ length: 28 }, (_, i) => ({

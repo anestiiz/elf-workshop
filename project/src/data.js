@@ -42,25 +42,25 @@ export const TOYS = [
 
 export const BOX_COLORS = ['red', 'green', 'blue', 'purple'];
 
-export const SHIFT_SECONDS = 120;
+export const SHIFT_SECONDS = 90;
 export const SPEED_STEP_SECONDS = 30; // каждые 30 с лента ускоряется
 
 export function levelCfg(L) {
-  const k = 1 + 0.15 * (L - 1);
+  const k = 1 + 0.2 * (L - 1);           // чуть круче — меньше уровней
   return {
     level: L,
     toys: TOYS.slice(0, Math.min(TOYS.length, 2 + L)),
-    travel: Math.max(5.5, 10 - 0.5 * (L - 1)),     // секунд на проезд ленты в начале смены
-    patience: Math.max(24, 42 - 3 * (L - 1)),       // секунд на заказ
-    orderEvery: Math.max(7, 13 - (L - 1)),          // как часто приходят новые заказы
+    travel: Math.max(5, 10 - 0.6 * (L - 1)),        // секунд на проезд ленты
+    patience: Math.max(22, 40 - 3 * (L - 1)),        // секунд на заказ
+    orderEvery: Math.max(7, 13 - (L - 1)),           // как часто приходят новые заказы
     maxOrders: 3,
-    junk: Math.min(0.22, 0.1 + 0.03 * (L - 1)),     // доля мусора на ленте
+    junk: Math.min(0.24, 0.1 + 0.04 * (L - 1)),      // доля мусора на ленте
     coal: L >= 2,
     stars: [200, 450, 700].map((v) => Math.round((v * k) / 10) * 10),
     // разнообразие вводится постепенно:
-    urgent: L >= 2 ? Math.min(0.35, 0.22 + 0.04 * (L - 2)) : 0,   // смена 2+: срочные заказы
-    bonusEvery: L >= 3 ? Math.max(16, 24 - 2 * (L - 3)) : 0,       // смена 3+: бонусы на ленте
-    hazardEvery: L >= 4 ? Math.max(22, 38 - 4 * (L - 4)) : 0,      // смена 4+: помехи
+    urgent: L >= 2 ? Math.min(0.35, 0.22 + 0.05 * (L - 2)) : 0,    // смена 2+: срочные заказы
+    bonusEvery: L >= 3 ? Math.max(14, 22 - 2 * (L - 3)) : 0,        // смена 3+: бонусы на ленте
+    hazardEvery: L >= 4 ? Math.max(20, 34 - 4 * (L - 4)) : 0,       // смена 4+: помехи
     hazards: L >= 5 ? ['reverse', 'shuffle'] : ['reverse'],
   };
 }
