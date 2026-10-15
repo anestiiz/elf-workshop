@@ -151,6 +151,20 @@ const FLAKES = Array.from({ length: 28 }, (_, i) => ({
   left: `${(i * 37) % 100}%`, delay: `${(i * 0.53) % 8}s`, dur: `${7 + (i % 5) * 1.6}s`, size: 3 + (i % 4) * 2,
 }));
 
+// плавная прокрутка с контролируемой скоростью (px/ms) и easeInOut
+function animateScroll(el, to, pxPerMs, done) {
+  const from = el.scrollTop, dist = to - from;
+  if (Math.abs(dist) < 2) { el.scrollTop = to; done?.(); return; }
+  const dur = Math.abs(dist) / pxPerMs;
+  const t0 = performance.now();
+  (function step(now) {
+    const p = Math.min((now - t0) / dur, 1);
+    const ease = p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2;
+    el.scrollTop = from + dist * ease;
+    p < 1 ? requestAnimationFrame(step) : done?.();
+  })(t0);
+}
+
 export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onTourDone }) {
   const scroller = useRef(null);
   const [W, setW] = useState(390);
@@ -171,25 +185,28 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onT
     if (!el) return;
     setW(el.clientWidth);
 
-    const targetY = Math.max(0, nodePos(elfAt).y - el.clientHeight * 0.6);
+    const getTarget = () => Math.max(0, nodePos(elfAt).y - el.clientHeight * 0.6);
 
     if (!save.tourDone) {
-      // первый заход — экскурсия: начинаем снизу
-      el.scrollTop = el.scrollHeight;
+      // Первый заход — экскурсия: снизу (уровень 1) → наверх (резиденция) → текущий уровень
       setTouring(true);
+      el.scrollTop = el.scrollHeight;           // начинаем снизу
 
-      // 1) плавно наверх (к резиденции)
-      setTimeout(() => el.scrollTo({ top: 0, behavior: 'smooth' }), 400);
-      // 2) потом обратно к текущей смене
-      const dur = Math.min(2800, el.scrollHeight / 1.5); // ~скорость прокрутки
-      setTimeout(() => el.scrollTo({ top: targetY, behavior: 'smooth' }), 400 + dur + 600);
       setTimeout(() => {
-        setTouring(false);
-        if (onTourDone) onTourDone();
-      }, 400 + dur + 600 + 1500);
+        // 1) медленно наверх к резиденции (0.3 px/ms ≈ ~10 сек на длинную карту)
+        animateScroll(el, 0, 0.3, () => {
+          // 2) пауза наверху, потом обратно к текущему уровню
+          setTimeout(() => {
+            animateScroll(el, getTarget(), 0.45, () => {
+              setTouring(false);
+              onTourDone?.();
+            });
+          }, 700);
+        });
+      }, 500);
     } else {
       // обычный заход — сразу к текущей смене
-      el.scrollTop = targetY;
+      el.scrollTop = getTarget();
     }
   }, []);
 
