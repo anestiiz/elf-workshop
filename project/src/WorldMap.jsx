@@ -188,12 +188,12 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onT
     const getTarget = () => Math.max(0, nodePos(elfAt).y - el.clientHeight * 0.6);
 
     if (!save.tourDone) {
-      // Первый заход — экскурсия: снизу (уровень 1) → наверх (резиденция) → текущий уровень
+      // Экскурсия: начинаем у текущего уровня → едем наверх → возвращаемся сюда
       setTouring(true);
-      el.scrollTop = el.scrollHeight;           // начинаем снизу
+      el.scrollTop = getTarget();                // показываем текущий уровень
 
       setTimeout(() => {
-        // 1) медленно наверх к резиденции (0.3 px/ms ≈ ~10 сек на длинную карту)
+        // 1) медленно наверх к резиденции
         animateScroll(el, 0, 0.3, () => {
           // 2) пауза наверху, потом обратно к текущему уровню
           setTimeout(() => {
@@ -203,7 +203,7 @@ export default function WorldMap({ save, walkFrom, onPlay, onBack, onWalked, onT
             });
           }, 700);
         });
-      }, 500);
+      }, 1200);  // задержка чтобы игрок увидел свой уровень
     } else {
       // обычный заход — сразу к текущей смене
       el.scrollTop = getTarget();

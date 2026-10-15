@@ -1124,7 +1124,7 @@ img.sprite { width: 1.15em; height: 1.15em; object-fit: contain; vertical-align:
 .zone-label.left { left: 2%; }
 .zone-label.right { right: 2%; }
 .zone-label.top { top: 70px; bottom: auto; left: 50%; right: auto; translate: -50% 0; }
-.node-play { top: 58px; animation: none; }
+.node-play { top: 58px; left: 40px; animation: none; }
 .node-current .node-stars { display: none; }
 .zone-label { bottom: auto; flex-direction: column; gap: 0; padding: 8px 8px; border-radius: 12px; max-width: 92px; white-space: normal; text-align: center; line-height: 1.1; font-size: 11px; translate: 0 -50%; }
 .zone-label i { font-size: 22px; }
