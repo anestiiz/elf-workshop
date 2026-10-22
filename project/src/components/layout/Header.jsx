@@ -6,14 +6,13 @@ import MTSHeader from './MTSHeader';
 const logoutUrl = 'https://login.mts.ru/amserver/UI/Logout?goto=' + window.location.origin + window.location.pathname
 
 const loginUrl = (() => {
-  // Get current URL
-  const currentUrl = new URL(window.location.href);
-  
-  // Set the auth parameter to 1
-  currentUrl.searchParams.set('auth', '1');
-  
-  // Return the complete URL string
-  return currentUrl.toString();
+  try {
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('auth', '1');
+    return currentUrl.toString();
+  } catch {
+    return window.location.href || '#';
+  }
 })();
 
 const Header = () => {

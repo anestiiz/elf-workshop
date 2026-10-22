@@ -867,7 +867,7 @@ export default function App() {
     setSave(next); writeSave(next);
     start(1);
   }
-  const toMenu = () => { g.current = makeGame(Math.min(saveRef.current.unlocked, MAP_LEVELS), true); setScreen('menu'); };
+  const toMenu = () => toMap();
   const [mapWalkFrom, setMapWalkFrom] = useState(0);
   const toMap = (walkFrom = 0) => {
     g.current = makeGame(Math.min(saveRef.current.unlocked, MAP_LEVELS), true);
@@ -1153,30 +1153,10 @@ export default function App() {
 
         {/* экраны */}
         {screen === 'loading' && (
-          <Loader onStart={() => { sfx.pick(); music.start(); }} onDone={() => setScreen('menu')} />
-        )}
-        {screen === 'menu' && (
-          <div className="overlay">
-            <div className="card menu">
-              <Garland />
-              <div className="card-head">
-                <div className="eyebrow">Мастерская Деда Мороза</div>
-                <div className="card-title">
-                  <h1>Эльфийский цех</h1>
-                  <p className="lead">Дед Мороз и его эльфы собирают подарки для всех детей. Помогите им успеть к празднику!</p>
-                </div>
-              </div>
-              <div className="card-actions">
-              <SnowButton variant="corners">
-                <MTSButton variant="primary" size={52} fluid className="btn primary" onClick={() => (save.tutorialDone ? toMap() : startTutorial())}>
-                  {!save.tutorialDone ? 'Начать' : 'Играть'}
-                </MTSButton>
-              </SnowButton>
-              {save.tutorialDone && <MTSButton variant="ghost" size={52} fluid className="btn ghost" onClick={startTutorial}>Пройти обучение</MTSButton>}
-              <p className="sound-hint">Включите звук для полного погружения в праздничную атмосферу 🎄</p>
-              </div>
-            </div>
-          </div>
+          <Loader
+            onStart={() => { sfx.pick(); music.start(); }}
+            onDone={() => (save.tutorialDone ? toMap() : startTutorial())}
+          />
         )}
 
         {screen === 'intro' && intro && (

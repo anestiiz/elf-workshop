@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MTSButton } from './components/MTSButton/MTSButton.jsx';
-import { SnowButton } from './components/SnowButton/SnowButton.jsx';
 import { ASSETS } from './assets.js';
 
 const TIPS = [
@@ -10,24 +8,16 @@ const TIPS = [
   'Дед Мороз проверяет список…',
   'Греем какао для смены…',
 ];
-const MIN_TIME = 2400; // мс: загрузка не мелькает, даже если всё уже в кэше
-
-// искры раскиданы заранее, чтобы не прыгали при перерисовке
-const SPARKS = Array.from({ length: 16 }, (_, i) => ({
-  left: `${8 + ((i * 37) % 84)}%`,
-  top: `${6 + ((i * 53) % 60)}%`,
-  delay: `${(i * 0.37) % 2.6}s`,
-  size: 6 + ((i * 7) % 8),
-}));
+const MIN_TIME = 2400;
 
 export default function Loader({ onDone, onStart }) {
-  const [real, setReal] = useState(0);     // доля реально загруженных картинок
-  const [shown, setShown] = useState(0);   // плавная полоска
+  const [real, setReal] = useState(0);
+  const [shown, setShown] = useState(0);
   const [tip, setTip] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const doneRef = useRef(false);
   const t0 = useRef(performance.now());
 
-  // предзагрузка всех картинок игры (и шрифтов)
   useEffect(() => {
     const urls = Object.entries(ASSETS)
       .filter(([k]) => !k.startsWith('music_bg') && !k.startsWith('map_zone') && k !== 'loader')
@@ -40,66 +30,63 @@ export default function Loader({ onDone, onStart }) {
       img.onload = tick; img.onerror = tick;
       img.src = u;
     });
-    // большие фоны карты качаем в фоне, не задерживая загрузку
     Object.entries(ASSETS).filter(([k]) => k.startsWith('map_zone')).forEach(([, v], i) => setTimeout(() => { const im = new Image(); im.src = v; }, 1500 + i * 400));
     const fonts = document.fonts && document.fonts.ready;
     (fonts ? fonts.then(tick, tick) : Promise.resolve().then(tick));
   }, []);
 
-  // полоска догоняет реальную загрузку, но не быстрее MIN_TIME
   useEffect(() => {
     let raf;
     const loop = () => {
       const byTime = Math.min(1, (performance.now() - t0.current) / MIN_TIME);
-      setShown((s) => Math.max(s, Math.min(real, byTime)));
+      setShown((s) => {
+        const next = Math.max(s, Math.min(real, byTime));
+        if (next >= 0.999 && !doneRef.current) {
+          doneRef.current = true;
+          if (onStart) onStart();
+          // авто-переход: exit-анимация → onDone
+          setLeaving(true);
+          setTimeout(() => { if (onDone) onDone(); }, 450);
+        }
+        return next;
+      });
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [real]);
+  }, [real, onStart, onDone]);
 
   useEffect(() => {
+    if (doneRef.current) return;
     const id = setInterval(() => setTip((t) => (t + 1) % TIPS.length), 1400);
     return () => clearInterval(id);
   }, []);
 
-  const ready = shown >= 0.999;
-  const go = () => {
-    if (!ready || leaving) return;
-    if (onStart) onStart();   // звук запускаем прямо в нажатии — иначе браузер его заблокирует
-    setLeaving(true);
-    setTimeout(onDone, 450);
-  };
-
   return (
-    <div className={`loader ${leaving ? 'leaving' : ''} ${ready ? 'ready' : ''}`} onClick={go} role="button" aria-label="Нажмите, чтобы начать">
+    <div className={`loader-screen ${leaving ? 'leaving' : ''}`}>
+      {/* фон — картинка */}
       {ASSETS.loader
-        ? <img className="loader-art" src={ASSETS.loader} alt="" draggable={false} />
-        : <div className="loader-art fallback">🧝🎁</div>}
-      <div className="loader-sparks" aria-hidden="true">
-        {SPARKS.map((s, i) => (
-          <i key={i} style={{ left: s.left, top: s.top, animationDelay: s.delay, width: s.size, height: s.size }} />
-        ))}
+        ? <img className="ls-bg" src={ASSETS.loader} alt="" draggable={false} />
+        : <div className="ls-bg fallback">🧝🎁</div>}
+      {/* градиенты сверху и снизу */}
+      <div className="ls-grad" aria-hidden="true" />
+      {/* размытие за заголовком */}
+      <div className="ls-blur-top" aria-hidden="true" />
+
+      {/* верхний блок: заголовок + подзаголовок */}
+      <div className="ls-top">
+        <h1 className="ls-title">Мастерская Деда Мороза</h1>
+        <p className="ls-subtitle">
+          Помогите эльфам собрать подарки к Новому году!
+        </p>
       </div>
-      <div className="loader-panel">
-        <div className="loader-head">
-          <div className="eyebrow light">Мастерская Деда Мороза</div>
-          <h1 className="loader-title">Эльфийский цех</h1>
+
+      {/* нижний блок: загрузка */}
+      <div className="ls-bottom">
+        <div className="ls-bar" aria-label={`Загрузка ${Math.round(shown * 100)}%`}>
+          <div className="ls-bar-fill" style={{ width: `${shown * 100}%` }} />
         </div>
-        <div className="loader-action">
-        {!ready ? (
-          <>
-            <div className="loader-bar" aria-label={`Загрузка ${Math.round(shown * 100)}%`}>
-              <div style={{ width: `${shown * 100}%` }} />
-            </div>
-            <div className="loader-tip" key={tip}>{TIPS[tip]}</div>
-          </>
-        ) : (
-          <SnowButton variant="wide" className="loader-go-wrap">
-            <MTSButton variant="primary" size={52} fluid className="btn primary loader-go" onClick={(e) => { e.stopPropagation(); go(); }}>Нажмите, чтобы начать</MTSButton>
-          </SnowButton>
-        )}
-        </div>
+        <div className="ls-tip" key={tip}>{TIPS[tip]}</div>
       </div>
     </div>
   );
