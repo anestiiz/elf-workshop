@@ -1,0 +1,345 @@
+/* Базовые стили кнопки */
+.mts-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  font-family: "MTS Wide", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Размеры */
+.mts-button--size-24 {
+  width: 335px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+}
+
+.mts-button--size-32 {
+  width: 335px;
+  height: 32px;
+  padding: 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.5px;
+}
+
+.mts-button--size-44 {
+  width: 335px;
+  height: 44px;
+  padding: 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+}
+
+.mts-button--size-52 {
+  width: 335px;
+  height: 52px;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+}
+
+.mts-button--size-72 {
+  width: 335px;
+  height: 72px;
+  padding: 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.7px;
+}
+
+/* CSS переменные для цветов */
+:root {
+  --Button-Primary: #FF0032;
+  --Button-Primary-Hover: #E4002E;
+  --Button-Primary-Alternative: #1D2023;
+  --Button-Primary-Alternative-Hover: #36393D;
+  --Button-Always-White: #FFF;
+  --Button-Always-White-Hover: #E4E7EC;
+  --Button-Secondary: #F2F3F7;
+  --Button-Secondary-Hover: #E5E7ED;
+  --Button-Blur: rgba(255, 255, 255, 0.08);
+  --Button-Blur-Hover: #E7E9EC;
+  --Button-Ghost: transparent;
+  --Button-Ghost-Hover: #E7E9EC;
+  --Button-Negative: #F2F3F7;
+  --Button-Negative-Hover: #E5E7ED;
+  --Button-Disabled: rgba(188, 195, 208, 0.50);
+
+  --Text-Primary: #FFF;
+  --Text-Secondary: #1D2023;
+  --Text-Negative: #D8400C;
+  --Text-Disabled: #969FA8;
+
+  --Border-Ghost: #E5E7EB;
+}
+
+/* Варианты кнопок */
+.mts-button--primary {
+  background: var(--Button-Primary);
+  color: var(--Text-Primary);
+}
+
+.mts-button--primary-alternative {
+  background: var(--Button-Primary-Alternative);
+  color: var(--Text-Primary);
+}
+
+.mts-button--always-white {
+  background: var(--Button-Always-White);
+  color: var(--Text-Secondary);
+}
+
+.mts-button--blur {
+  background: var(--Button-Blur);
+  color: var(--Text-Primary);
+  backdrop-filter: blur(20px);
+}
+
+.mts-button--secondary {
+  background: var(--Button-Secondary);
+  color: var(--Text-Secondary);
+}
+
+.mts-button--ghost {
+  background: var(--Button-Ghost);
+  color: var(--Text-Secondary);
+  border: 1px solid var(--Border-Ghost);
+}
+
+.mts-button--negative {
+  background: var(--Button-Negative);
+  color: var(--Text-Negative);
+}
+
+.mts-button--scroll {
+  background: transparent;
+  color: var(--Text-Secondary);
+  width: auto !important;
+  min-width: 44px;
+  height: 44px;
+  padding: 10px !important;
+}
+
+/* Hover */
+.mts-button--primary:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Button-Primary-Hover);
+}
+
+.mts-button--primary-alternative:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Button-Primary-Alternative-Hover);
+}
+
+.mts-button--always-white:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Button-Always-White-Hover);
+}
+
+.mts-button--blur:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Background-Hover, rgba(188, 195, 208, 0.25));
+  backdrop-filter: blur(0px);
+}
+
+.mts-button--secondary:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Button-Secondary-Hover);
+}
+
+.mts-button--ghost:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Button-Ghost-Hover);
+}
+
+.mts-button--negative:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Button-Negative-Hover);
+}
+
+.mts-button--scroll:hover:not(.mts-button--disabled):not(.mts-button--waiting) {
+  background: var(--Button-Secondary-Hover);
+}
+
+/* Текст для разных вариантов */
+.mts-button--primary,
+.mts-button--primary-alternative,
+.mts-button--blur {
+  font-feature-settings: 'liga' off, 'clig' off;
+}
+
+/* Disabled */
+.mts-button--disabled {
+  opacity: 0.6;
+  background: var(--Button-Disabled) !important;
+  cursor: not-allowed !important;
+}
+
+.mts-button--disabled .mts-button__text {
+  color: var(--Text-Disabled) !important;
+}
+
+.mts-button--disabled:hover,
+.mts-button--waiting:hover {
+  background: var(--Button-Disabled) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.mts-button--disabled.mts-button--ghost:hover {
+  border: 1px solid var(--Border-Ghost);
+}
+
+/* Fluid */
+.mts-button--fluid {
+  width: 100% !important;
+}
+
+/* Waiting */
+.mts-button--waiting {
+  cursor: wait !important;
+}
+
+.mts-button--waiting .mts-button__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.mts-button--waiting .mts-button__text {
+  display: none;
+}
+
+/* Контейнер контента */
+.mts-button__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+.mts-button__text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Обертка спиннера */
+.mts-button__spinner-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+/* Новый CSS-спиннер без SVG и foreignObject */
+.mts-button-spinner {
+  --spinner-color-rgb: 255, 255, 255;
+  --spinner-thickness: 3px;
+
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 90deg,
+    rgba(var(--spinner-color-rgb), 1) 0deg,
+    rgba(var(--spinner-color-rgb), 0) 22.195deg,
+    rgba(var(--spinner-color-rgb), 0.1) 81.346deg,
+    rgba(var(--spinner-color-rgb), 0.425) 182.596deg,
+    rgba(var(--spinner-color-rgb), 0.75) 283.846deg,
+    rgba(var(--spinner-color-rgb), 1) 360deg
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--spinner-thickness)),
+    #000 calc(100% - var(--spinner-thickness) + 0.5px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--spinner-thickness)),
+    #000 calc(100% - var(--spinner-thickness) + 0.5px)
+  );
+  animation: mts-button-spinner-rotate 0.8s linear infinite;
+}
+
+.mts-button-spinner--light {
+  --spinner-color-rgb: 255, 255, 255;
+}
+
+.mts-button-spinner--dark {
+  --spinner-color-rgb: 29, 32, 35;
+}
+
+/* Размеры спиннера по размеру кнопки */
+.mts-button--size-24 .mts-button-spinner,
+.mts-button--size-32 .mts-button-spinner {
+  width: 16px !important;
+  height: 16px !important;
+  --spinner-thickness: 2px;
+}
+
+.mts-button--size-44 .mts-button-spinner,
+.mts-button--size-52 .mts-button-spinner,
+.mts-button--size-72 .mts-button-spinner {
+  width: 24px !important;
+  height: 24px !important;
+  --spinner-thickness: 3px;
+}
+
+@keyframes mts-button-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Контекстные цвета фона */
+.mts-button--context-primary {
+  /* Дополнительные стили для фона primary */
+}
+
+.mts-button--context-secondary {
+  /* Дополнительные стили для фона secondary */
+}
+
+/* Focus */
+.mts-button:not(.mts-button--disabled):focus {
+  box-shadow: 0 0 0 3px rgba(255, 0, 50, 0.3);
+}
+
+.mts-button--always-white:not(.mts-button--disabled):focus {
+  box-shadow: 0 0 0 3px rgba(29, 32, 35, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .mts-button--size-24,
+  .mts-button--size-32,
+  .mts-button--size-44,
+  .mts-button--size-52,
+  .mts-button--size-72 {
+    width: 100%;
+    max-width: 335px;
+  }
+
+  .mts-button--fluid {
+    max-width: 100% !important;
+  }
+}

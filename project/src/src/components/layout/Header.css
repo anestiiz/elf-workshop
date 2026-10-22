@@ -1,0 +1,122 @@
+.header {
+  border-bottom: 1px solid var(--Background-Light-Stroke, rgba(188, 195, 208, 0.50));
+  background: var(--Background-Light-Primary, #FFF);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: "MTS Compact";
+  padding: 10px 20px;
+}
+
+.header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__logo {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.logo-red {
+  color: var(--mts-red);
+  font-size: 1.5rem;
+}
+
+.logo-text {
+  color: var(--mts-gray-dark);
+  font-size: 0.9rem;
+}
+
+.header__nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: var(--mts-gray);
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: var(--mts-red);
+}
+
+.header__phone {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--mts-red);
+  color: var(--mts-red);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.header__phone:hover {
+  background: var(--mts-red);
+  color: var(--mts-white);
+}
+
+.header__menu {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.header__menu span {
+  width: 24px;
+  height: 2px;
+  background: var(--mts-gray-dark);
+}
+
+.enter__button {
+  display: flex;
+  height: 32px;
+  padding: 6px 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  background: var(--Controls-Light-Primary-Active, #FF0032);
+  color: var(--Constant-Greyscale-0, #FFF);
+  text-align: center;
+  font-feature-settings: 'liga' off, 'clig' off;
+  font-family: "MTS Compact";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  border-width: 0px;
+}
+
+@media (max-width: 768px) {
+  .header__nav {
+    display: none;
+  }
+  
+  .header__phone {
+    display: none;
+  }
+  
+  .header__menu {
+    display: flex;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .header {
+    background: #1D2023;
+    border-bottom: 1px solid rgba(127, 140, 153, 0.35);
+  }
+}
