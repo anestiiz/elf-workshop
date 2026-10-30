@@ -8,7 +8,7 @@ import { build, transform } from 'esbuild';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
 // The live v41 runtime contains later changes absent from project/src (v30).
-// Keep that runtime intact and replace only its isolated tutorial-preview component.
+// Preserve the runtime outside onboarding: tutorial previews and the first map opening.
 const baseJs = 'index-kXPXuDVO.js', baseCss = 'index-0PbqAdmS.css';
 const base = await fs.readFile(path.join(root, 'assets', baseJs), 'utf8');
 const sha = crypto.createHash('sha1').update(`blob ${Buffer.byteLength(base)}\0`).update(base).digest('hex');
@@ -16,7 +16,12 @@ if (sha !== '128ba83dc7fc2d845fbc52ec1cbf9da2507c8d38') throw Error('The v41 bas
 const ast = parse(base, { sourceType: 'module' });
 const preview = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'Is');
 const modal = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'Ps');
-if (!preview || !modal) throw Error('Tutorial component boundaries not found.');
+const map = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'rc');
+if (!preview || !modal || !map) throw Error('Onboarding component boundaries not found.');
+const mapIntro = 't.tourDone?O.scrollTop=sa(p):(Ut(!0),O.scrollTop=O.scrollHeight,setTimeout(()=>{Yd(O,0,.3,()=>{setTimeout(()=>{Yd(O,sa(p),.45,()=>{Ut(!1),i?.()})},700)})},600))';
+const mapPosition = '(O.scrollTop=sa(p),!t.tourDone&&i?.())';
+const mapIntroStart = base.indexOf(mapIntro, map.start);
+if (mapIntroStart < map.start || mapIntroStart + mapIntro.length > map.end) throw Error('First map opening not found.');
 const state = modal.body.body[0];
 if (!base.slice(state.start, state.end).includes('[u,f]') || !base.slice(state.start, state.end).includes('V2.useState')) throw Error('Unexpected tutorial state bindings.');
 const result = await build({ entryPoints: [path.join(here, 'TutorialDemo.jsx')], bundle: true, write: false, format: 'esm', minify: true, legalComments: 'none', target: 'es2020', jsx: 'transform', jsxFactory: 'React.createElement', jsxFragment: 'React.Fragment' });
@@ -26,6 +31,8 @@ const moduleName = `tutorial-demo-${hash(moduleJs)}.js`;
 const edits = [
   { start: preview.start, end: preview.end, text: 'var Is=createAutonomousTutorial(ze,C,G);' },
   { start: state.end, end: state.end, text: 'advanceAutonomousTutorial(V2,u&&!!l.play,t,e);' },
+  // Position immediately; keep the separate walking transition after a completed shift.
+  { start: mapIntroStart, end: mapIntroStart + mapIntro.length, text: mapPosition },
 ];
 let entry = base;
 for (const edit of edits.sort((a, b) => b.start - a.start)) entry = entry.slice(0, edit.start) + edit.text + entry.slice(edit.end);

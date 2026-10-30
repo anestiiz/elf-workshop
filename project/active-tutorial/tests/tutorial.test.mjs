@@ -52,16 +52,21 @@ test('moving sprites stay between measured endpoints at every responsive size', 
   }
 });
 
-test('the generated game preserves every byte of the v41 runtime outside the tutorial seam', () => {
+test('the generated game preserves every byte outside tutorial and first-map onboarding', () => {
   const original = fs.readFileSync(path.join(root, 'assets/index-kXPXuDVO.js'), 'utf8');
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const entry = /src="\.\/assets\/(index-autotutorial-[^"]+\.js)"/.exec(html)[1];
   const ast = parse(original, { sourceType: 'module' });
   const oldPreview = ast.program.body.find(n => n.type === 'FunctionDeclaration' && n.id.name === 'Is');
-  let restored = fs.readFileSync(path.join(root, 'assets', entry), 'utf8')
+  const generated = fs.readFileSync(path.join(root, 'assets', entry), 'utf8');
+  const mapPosition = '(O.scrollTop=sa(p),!t.tourDone&&i?.())';
+  const mapIntro = 't.tourDone?O.scrollTop=sa(p):(Ut(!0),O.scrollTop=O.scrollHeight,setTimeout(()=>{Yd(O,0,.3,()=>{setTimeout(()=>{Yd(O,sa(p),.45,()=>{Ut(!1),i?.()})},700)})},600))';
+  assert.ok(generated.includes(mapPosition), 'First map opening must position the map immediately.');
+  let restored = generated
     .replace(/^import\{createTutorialDemo[^\n]+\n/, '')
     .replace('var Is=createAutonomousTutorial(ze,C,G);', original.slice(oldPreview.start, oldPreview.end))
-    .replace('advanceAutonomousTutorial(V2,u&&!!l.play,t,e);', '');
+    .replace('advanceAutonomousTutorial(V2,u&&!!l.play,t,e);', '')
+    .replace(mapPosition, mapIntro);
   assert.equal(restored, original);
   const moduleFile = /from"\.\/(tutorial-demo-[^"]+\.js)"/.exec(fs.readFileSync(path.join(root, 'assets', entry), 'utf8'))[1];
   const module = fs.readFileSync(path.join(root, 'assets', moduleFile), 'utf8');
