@@ -1,4 +1,6 @@
 /* Real DOM sprites and a visible pointer; no video or manual input inside the preview. */
+/* Removing the fresh badge must not start the legacy default drop-in animation. */
+.order{animation:none}
 /* Keep the completed-step button aligned with its separately positioned snow. */
 .tut-modal .tut-btn--ready{animation:none}
 /* A continuous backing closes transparent joins in the decorative side rails. */
