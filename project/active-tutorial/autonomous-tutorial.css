@@ -1,6 +1,8 @@
 /* Real DOM sprites and a visible pointer; no video or manual input inside the preview. */
 /* Removing the fresh badge must not start the legacy default drop-in animation. */
 .order{animation:none}
+/* Keep the hopper opening clear so the belt and parts pass through every zone. */
+.hopper-img{border-image-slice:166 112 0 111}
 /* Keep the completed-step button aligned with its separately positioned snow. */
 .tut-modal .tut-btn--ready{animation:none}
 .tut-copy--autoplay{gap:16px}
