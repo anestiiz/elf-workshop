@@ -3,6 +3,7 @@
 .tut-modal .tut-btn--ready{animation:none}
 /* A continuous backing closes transparent joins in the decorative side rails. */
 .tut-frame{bottom:0}
+.tut-frame-top{top:3px}
 .tut-frame::before{content:"";position:absolute;inset:66px 0 0;background:linear-gradient(to right,#963800 0 7.05%,transparent 7.05% 93.35%,#963800 93.35%)}
 .tp-autoplay{isolation:isolate;pointer-events:none;touch-action:auto}
 .tp-autoplay .tp-belt{background-position:0 center;animation:tp-auto-belt 3s linear infinite}
