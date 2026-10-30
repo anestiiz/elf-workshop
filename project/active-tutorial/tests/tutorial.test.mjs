@@ -58,14 +58,29 @@ test('the generated game preserves every byte outside tutorial and first-map onb
   const entry = /src="\.\/assets\/(index-autotutorial-[^"]+\.js)"/.exec(html)[1];
   const ast = parse(original, { sourceType: 'module' });
   const oldPreview = ast.program.body.find(n => n.type === 'FunctionDeclaration' && n.id.name === 'Is');
+  const oldModal = ast.program.body.find(n => n.type === 'FunctionDeclaration' && n.id.name === 'Ps');
+  let oldPrimary;
+  const findPrimary = node => {
+    if (!node || typeof node !== 'object') return;
+    if (node.type === 'CallExpression' && node.arguments[1]?.type === 'ObjectExpression'
+        && node.arguments[1].properties.some(p => p.key?.name === 'className' && p.value?.value === 'tut-btn-wrap')) oldPrimary = original.slice(node.start, node.end);
+    for (const value of Object.values(node)) {
+      if (Array.isArray(value)) value.forEach(findPrimary);
+      else if (value && typeof value === 'object') findPrimary(value);
+    }
+  };
+  findPrimary(oldModal.body);
   const generated = fs.readFileSync(path.join(root, 'assets', entry), 'utf8');
   const mapPosition = '(O.scrollTop=sa(p),!t.tourDone&&i?.())';
   const mapIntro = 't.tourDone?O.scrollTop=sa(p):(Ut(!0),O.scrollTop=O.scrollHeight,setTimeout(()=>{Yd(O,0,.3,()=>{setTimeout(()=>{Yd(O,sa(p),.45,()=>{Ut(!1),i?.()})},700)})},600))';
   assert.ok(generated.includes(mapPosition), 'First map opening must position the map immediately.');
+  assert.ok(generated.includes(`(!l.play&&${oldPrimary})`), 'Autoplay steps must omit their primary button.');
   let restored = generated
     .replace(/^import\{createTutorialDemo[^\n]+\n/, '')
     .replace('var Is=createAutonomousTutorial(ze,C,G);', original.slice(oldPreview.start, oldPreview.end))
     .replace('advanceAutonomousTutorial(V2,u&&!!l.play,t,e);', '')
+    .replace(`(!l.play&&${oldPrimary})`, oldPrimary)
+    .replace('`tut-copy ${l.play?"tut-copy--autoplay":""}`', '"tut-copy"')
     .replace(mapPosition, mapIntro);
   assert.equal(restored, original);
   const moduleFile = /from"\.\/(tutorial-demo-[^"]+\.js)"/.exec(fs.readFileSync(path.join(root, 'assets', entry), 'utf8'))[1];

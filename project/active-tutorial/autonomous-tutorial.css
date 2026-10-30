@@ -3,6 +3,7 @@
 .order{animation:none}
 /* Keep the completed-step button aligned with its separately positioned snow. */
 .tut-modal .tut-btn--ready{animation:none}
+.tut-copy--autoplay{gap:16px}
 /* A continuous backing closes transparent joins in the decorative side rails. */
 .tut-frame{bottom:0}
 .tut-frame-top{top:3px}

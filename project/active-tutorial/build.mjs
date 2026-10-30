@@ -18,6 +18,20 @@ const preview = ast.program.body.find(node => node.type === 'FunctionDeclaration
 const modal = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'Ps');
 const map = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'rc');
 if (!preview || !modal || !map) throw Error('Onboarding component boundaries not found.');
+const primaryControls = [], copyClasses = [];
+function inspectModal(node) {
+  if (!node || typeof node !== 'object') return;
+  if (node.type === 'CallExpression' && node.arguments[1]?.type === 'ObjectExpression'
+      && node.arguments[1].properties.some(p => p.key?.name === 'className' && p.value?.value === 'tut-btn-wrap')) primaryControls.push(node);
+  if (node.type === 'ObjectProperty' && node.key?.name === 'className' && node.value?.value === 'tut-copy') copyClasses.push(node.value);
+  for (const value of Object.values(node)) {
+    if (Array.isArray(value)) value.forEach(inspectModal);
+    else if (value && typeof value === 'object') inspectModal(value);
+  }
+}
+inspectModal(modal.body);
+if (primaryControls.length !== 1 || copyClasses.length !== 1) throw Error('Tutorial action layout changed.');
+const primary = primaryControls[0], copyClass = copyClasses[0];
 const mapIntro = 't.tourDone?O.scrollTop=sa(p):(Ut(!0),O.scrollTop=O.scrollHeight,setTimeout(()=>{Yd(O,0,.3,()=>{setTimeout(()=>{Yd(O,sa(p),.45,()=>{Ut(!1),i?.()})},700)})},600))';
 const mapPosition = '(O.scrollTop=sa(p),!t.tourDone&&i?.())';
 const mapIntroStart = base.indexOf(mapIntro, map.start);
@@ -31,6 +45,9 @@ const moduleName = `tutorial-demo-${hash(moduleJs)}.js`;
 const edits = [
   { start: preview.start, end: preview.end, text: 'var Is=createAutonomousTutorial(ze,C,G);' },
   { start: state.end, end: state.end, text: 'advanceAutonomousTutorial(V2,u&&!!l.play,t,e);' },
+  // Autoplay scenes need no disabled Next button; static steps keep their action.
+  { start: primary.start, end: primary.end, text: `(!l.play&&${base.slice(primary.start, primary.end)})` },
+  { start: copyClass.start, end: copyClass.end, text: '`tut-copy ${l.play?"tut-copy--autoplay":""}`' },
   // Position immediately; keep the separate walking transition after a completed shift.
   { start: mapIntroStart, end: mapIntroStart + mapIntro.length, text: mapPosition },
 ];
