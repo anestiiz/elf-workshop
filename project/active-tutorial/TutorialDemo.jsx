@@ -10,8 +10,9 @@ export function createTutorialDemo(React, assets, sound) {
   const Badge = ({ children, bad = false }) => <span className={`tp-badge tp-badge--${bad ? 'bad' : 'ok'}`}>{!bad && <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg>}{children}</span>;
 
   return function TutorialDemo({ kind, onDone }) {
-    const time = useVisibleElapsed(React, kind, true, DURATION[kind]);
-    const frame = demoFrame(kind, time);
+    const elapsed = useVisibleElapsed(React, kind, true, DURATION[kind]);
+    const frame = demoFrame(kind, elapsed);
+    const time = frame.time;
     const root = React.useRef(null), slot = React.useRef(null), destination = React.useRef(null), trash = React.useRef(null);
     const sources = React.useRef({});
     const [points, setPoints] = React.useState(null);

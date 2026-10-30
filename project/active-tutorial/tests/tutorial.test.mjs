@@ -4,27 +4,29 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from '@babel/parser';
-import { demoFrame, DURATION, createVisibleClock, lerpPoint, between } from '../timeline.mjs';
+import { demoFrame, DURATION, NEXT_DELAY, createVisibleClock, lerpPoint, between } from '../timeline.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
 test('collection runs from an empty bench through three actual parts to a packed gift', () => {
   assert.equal(demoFrame('collect', 0).count, 0);
-  assert.equal(demoFrame('collect', 2.4).moving, true);
-  for (const [time, count] of [[3.01, 1], [5.41, 2], [7.81, 3]]) assert.equal(demoFrame('collect', time).count, count);
-  assert.equal(demoFrame('collect', 8).phase, 'assembled');
-  assert.equal(demoFrame('collect', 9.8).shipping, true);
-  assert.equal(demoFrame('collect', 10.3).phase, 'packed');
+  assert.equal(demoFrame('collect', 2).moving, true);
+  for (const [time, count] of [[2.51, 1], [4.51, 2], [6.51, 3]]) assert.equal(demoFrame('collect', time).count, count);
+  assert.equal(demoFrame('collect', 6.7).phase, 'assembled');
+  assert.equal(demoFrame('collect', 8.2).shipping, true);
+  assert.equal(demoFrame('collect', 8.6).phase, 'packed');
   assert.equal(demoFrame('collect', DURATION.collect - .01).complete, false);
   assert.equal(demoFrame('collect', DURATION.collect).complete, true);
+  const total = DURATION.collect + DURATION.trash + 2 * NEXT_DELAY;
+  assert.ok(total > 16 && total < 17, 'both demos and transitions should take about 17 visible seconds');
 });
 
 test('cleanup demonstrates both clicks, removal and a free slot without input', () => {
   assert.equal(demoFrame('trash', 0).phase, 'junk');
-  assert.equal(demoFrame('trash', 2).press, true);
-  assert.equal(demoFrame('trash', 2.3).armed, true);
-  assert.equal(demoFrame('trash', 3.3).press, true);
-  assert.equal(demoFrame('trash', 3.8).flying, true);
-  assert.equal(demoFrame('trash', 4.4).clean, true);
+  assert.equal(demoFrame('trash', 1.7).press, true);
+  assert.equal(demoFrame('trash', 2).armed, true);
+  assert.equal(demoFrame('trash', 2.8).press, true);
+  assert.equal(demoFrame('trash', 3.2).flying, true);
+  assert.equal(demoFrame('trash', 3.7).clean, true);
   assert.equal(demoFrame('trash', DURATION.trash).complete, true);
 });
 
