@@ -28,3 +28,5 @@
 @keyframes tp-auto-belt{to{background-position:160px center}}
 @keyframes tp-auto-tap{from{opacity:1;scale:.5}to{opacity:0;scale:1.6}}
 @media(prefers-reduced-motion:reduce){.tp-autoplay .tp-belt,.tp-auto-pointer.is-pressing i{animation:none}.tp-autoplay .tp-slot-part,.tp-autoplay .tp-slot-toy,.tp-autoplay .tp-target{animation:none}.tp-auto-pointer svg{transition:none}}
+/* Keep the map opaque from its first frame: gameplay lives underneath it. */
+.map-screen { animation: none; }

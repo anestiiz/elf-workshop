@@ -52,7 +52,7 @@ test('moving sprites stay between measured endpoints at every responsive size', 
   }
 });
 
-test('the generated game preserves every byte outside tutorial and first-map onboarding', () => {
+test('the generated game preserves every byte outside tutorial and menu/map onboarding', () => {
   const original = fs.readFileSync(path.join(root, 'assets/index-kXPXuDVO.js'), 'utf8');
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const entry = /src="\.\/assets\/(index-autotutorial-[^"]+\.js)"/.exec(html)[1];
@@ -75,13 +75,15 @@ test('the generated game preserves every byte outside tutorial and first-map onb
   const mapIntro = 't.tourDone?O.scrollTop=sa(p):(Ut(!0),O.scrollTop=O.scrollHeight,setTimeout(()=>{Yd(O,0,.3,()=>{setTimeout(()=>{Yd(O,sa(p),.45,()=>{Ut(!1),i?.()})},700)})},600))';
   assert.ok(generated.includes(mapPosition), 'First map opening must position the map immediately.');
   assert.ok(generated.includes(`(!l.play&&${oldPrimary})`), 'Autoplay steps must omit their primary button.');
+  assert.ok(generated.includes('d||(T(!0),a&&a(),e&&e())'), 'Play must open the map synchronously, without fading to gameplay.');
   let restored = generated
     .replace(/^import\{createTutorialDemo[^\n]+\n/, '')
     .replace('var Is=createAutonomousTutorial(ze,C,G);', original.slice(oldPreview.start, oldPreview.end))
     .replace('advanceAutonomousTutorial(V2,u&&!!l.play,t,e);', '')
     .replace(`(!l.play&&${oldPrimary})`, oldPrimary)
     .replace('`tut-copy ${l.play?"tut-copy--autoplay":""}`', '"tut-copy"')
-    .replace(mapPosition, mapIntro);
+    .replace(mapPosition, mapIntro)
+    .replace('d||(T(!0),a&&a(),e&&e())', 'd||(a&&a(),T(!0),setTimeout(()=>{e&&e()},450))');
   assert.equal(restored, original);
   const moduleFile = /from"\.\/(tutorial-demo-[^"]+\.js)"/.exec(fs.readFileSync(path.join(root, 'assets', entry), 'utf8'))[1];
   const module = fs.readFileSync(path.join(root, 'assets', moduleFile), 'utf8');

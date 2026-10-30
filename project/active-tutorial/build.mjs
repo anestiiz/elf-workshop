@@ -8,7 +8,7 @@ import { build, transform } from 'esbuild';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
 // The live v41 runtime contains later changes absent from project/src (v30).
-// Preserve the runtime outside onboarding: tutorial previews and the first map opening.
+// Preserve the runtime outside onboarding: tutorial previews and menu/map entry.
 const baseJs = 'index-kXPXuDVO.js', baseCss = 'index-0PbqAdmS.css';
 const base = await fs.readFile(path.join(root, 'assets', baseJs), 'utf8');
 const sha = crypto.createHash('sha1').update(`blob ${Buffer.byteLength(base)}\0`).update(base).digest('hex');
@@ -17,7 +17,11 @@ const ast = parse(base, { sourceType: 'module' });
 const preview = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'Is');
 const modal = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'Ps');
 const map = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'rc');
-if (!preview || !modal || !map) throw Error('Onboarding component boundaries not found.');
+const loader = ast.program.body.find(node => node.type === 'FunctionDeclaration' && node.id.name === 'Fs');
+if (!preview || !modal || !map || !loader) throw Error('Onboarding component boundaries not found.');
+const menuExit = 'd||(a&&a(),T(!0),setTimeout(()=>{e&&e()},450))';
+const menuExitStart = base.indexOf(menuExit, loader.start);
+if (menuExitStart < loader.start || menuExitStart + menuExit.length > loader.end) throw Error('Menu start action not found.');
 const primaryControls = [], copyClasses = [];
 function inspectModal(node) {
   if (!node || typeof node !== 'object') return;
@@ -50,6 +54,8 @@ const edits = [
   { start: copyClass.start, end: copyClass.end, text: '`tut-copy ${l.play?"tut-copy--autoplay":""}`' },
   // Position immediately; keep the separate walking transition after a completed shift.
   { start: mapIntroStart, end: mapIntroStart + mapIntro.length, text: mapPosition },
+  // Open the map in the click event, before the loader can uncover the game.
+  { start: menuExitStart, end: menuExitStart + menuExit.length, text: 'd||(T(!0),a&&a(),e&&e())' },
 ];
 let entry = base;
 for (const edit of edits.sort((a, b) => b.start - a.start)) entry = entry.slice(0, edit.start) + edit.text + entry.slice(edit.end);
