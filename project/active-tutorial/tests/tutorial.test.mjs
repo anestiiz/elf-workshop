@@ -52,7 +52,7 @@ test('moving sprites stay between measured endpoints at every responsive size', 
   }
 });
 
-test('the generated game preserves every byte outside tutorial and menu/map onboarding', () => {
+test('the generated game preserves every byte outside onboarding and refreshed image URLs', () => {
   const original = fs.readFileSync(path.join(root, 'assets/index-kXPXuDVO.js'), 'utf8');
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const entry = /src="\.\/assets\/(index-autotutorial-[^"]+\.js)"/.exec(html)[1];
@@ -78,6 +78,7 @@ test('the generated game preserves every byte outside tutorial and menu/map onbo
   assert.ok(generated.includes('d||(T(!0),a&&a(),e&&e())'), 'Play must open the map synchronously, without fading to gameplay.');
   let restored = generated
     .replace(/^import\{createTutorialDemo[^\n]+\n/, '')
+    .replace(/\/\* updated-image-urls:start \*\/[\s\S]*?\/\* updated-image-urls:end \*\//, '')
     .replace('var Is=createAutonomousTutorial(ze,C,G);', original.slice(oldPreview.start, oldPreview.end))
     .replace('advanceAutonomousTutorial(V2,u&&!!l.play,t,e);', '')
     .replace(`(!l.play&&${oldPrimary})`, oldPrimary)

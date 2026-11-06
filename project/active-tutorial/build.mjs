@@ -45,8 +45,21 @@ if (!base.slice(state.start, state.end).includes('[u,f]') || !base.slice(state.s
 const result = await build({ entryPoints: [path.join(here, 'TutorialDemo.jsx')], bundle: true, write: false, format: 'esm', minify: true, legalComments: 'none', target: 'es2020', jsx: 'transform', jsxFactory: 'React.createElement', jsxFragment: 'React.Fragment' });
 const moduleJs = result.outputFiles[0].text;
 const hash = source => crypto.createHash('sha256').update(source).digest('base64url').slice(0, 8);
+const refreshedImages = ['elf_idle.png', 'elf_happy.png', 'elf_panic.png', 'intro_reindeer.png'];
+const imageOverrides = [];
+for (const filename of refreshedImages) {
+  const revision = hash(await fs.readFile(path.join(root, filename)));
+  imageOverrides.push(`${JSON.stringify(filename.slice(0, -4))}:Md(${JSON.stringify(`/${filename}?v=${revision}`)})`);
+}
+const imageAnchor = ast.program.body.find(node => node.type === 'ExpressionStatement'
+  && node.expression.type === 'AssignmentExpression'
+  && node.expression.left.object?.name === 'C'
+  && node.expression.left.property?.name === 'music_bg_fallback');
+if (!imageAnchor) throw Error('Asset table boundary not found.');
 const moduleName = `tutorial-demo-${hash(moduleJs)}.js`;
 const edits = [
+  // Content revisions prevent existing players from seeing cached character art.
+  { start: imageAnchor.end, end: imageAnchor.end, text: `/* updated-image-urls:start */Object.assign(C,{${imageOverrides.join(',')}});/* updated-image-urls:end */` },
   { start: preview.start, end: preview.end, text: 'var Is=createAutonomousTutorial(ze,C,G);' },
   { start: state.end, end: state.end, text: 'advanceAutonomousTutorial(V2,u&&!!l.play,t,e);' },
   // Autoplay scenes need no disabled Next button; static steps keep their action.
